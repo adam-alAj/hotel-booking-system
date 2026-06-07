@@ -8,3 +8,10 @@
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+
+# Build and IDE artifacts
+node_modules/
+build/
+.idea/
+.vscode/
+target/
