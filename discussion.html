@@ -1,0 +1,1981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EliteReserve — Project Discussion Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080e1a;
+    --bg2: #0d1525;
+    --bg3: #111d30;
+    --surface: #162038;
+    --surface2: #1c2a45;
+    --border: rgba(99,157,255,0.12);
+    --border2: rgba(99,157,255,0.22);
+    --gold: #f0b429;
+    --gold2: #ffd166;
+    --blue: #639dff;
+    --blue2: #4a80e8;
+    --cyan: #4ecdc4;
+    --green: #56d364;
+    --red: #ff6b6b;
+    --purple: #c084fc;
+    --text: #e8eef8;
+    --text2: #8fa3c4;
+    --text3: #5a7298;
+    --font: 'Sora', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    --radius: 10px;
+    --sidebar-w: 280px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 14px;
+    line-height: 1.6;
+    display: flex;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ─── SIDEBAR ─── */
+  #sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0; left: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar-header {
+    padding: 20px 18px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: var(--text);
+  }
+  .logo span { color: var(--gold); }
+
+  .project-badge {
+    margin-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(240,180,41,0.1);
+    border: 1px solid rgba(240,180,41,0.25);
+    color: var(--gold2);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+
+  /* Search */
+  .search-wrap {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .search-box {
+    position: relative;
+  }
+  .search-box svg {
+    position: absolute;
+    left: 10px; top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.4;
+  }
+  #searchInput {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 10px 7px 32px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #searchInput:focus { border-color: var(--blue2); }
+  #searchInput::placeholder { color: var(--text3); }
+
+  #searchCount {
+    font-size: 10px;
+    color: var(--text3);
+    padding: 4px 14px 0;
+    display: none;
+  }
+
+  /* Nav tree */
+  .nav-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0 20px;
+  }
+  .nav-scroll::-webkit-scrollbar { width: 4px; }
+  .nav-scroll::-webkit-scrollbar-track { background: transparent; }
+  .nav-scroll::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+  .nav-folder {
+    margin-bottom: 2px;
+  }
+
+  .nav-folder-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    background: none;
+    border: none;
+    color: var(--text2);
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    letter-spacing: 0.3px;
+    transition: color 0.2s, background 0.2s;
+    border-radius: 0;
+  }
+  .nav-folder-btn:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+
+  .nav-folder-btn .folder-icon { font-size: 13px; }
+  .nav-folder-btn .chevron {
+    margin-left: auto;
+    transition: transform 0.25s;
+    font-size: 10px;
+    opacity: 0.5;
+  }
+  .nav-folder-btn.open .chevron { transform: rotate(90deg); }
+
+  .nav-files {
+    display: none;
+    padding-left: 10px;
+  }
+  .nav-files.open { display: block; }
+
+  .nav-file-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 14px 5px 22px;
+    background: none;
+    border: none;
+    color: var(--text3);
+    font-family: var(--font);
+    font-size: 11.5px;
+    cursor: pointer;
+    text-align: left;
+    border-left: 2px solid transparent;
+    transition: all 0.18s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .nav-file-btn:hover { color: var(--text2); border-left-color: var(--border2); }
+  .nav-file-btn.active {
+    color: var(--blue);
+    border-left-color: var(--blue);
+    background: rgba(99,157,255,0.07);
+  }
+  .nav-file-btn .ext-badge {
+    margin-left: auto;
+    font-size: 9px;
+    font-family: var(--mono);
+    color: var(--text3);
+    background: var(--bg3);
+    padding: 1px 5px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  /* Special nav items */
+  .nav-special {
+    padding: 6px 14px;
+  }
+  .nav-special-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 10px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text3);
+    font-family: var(--font);
+    font-size: 11.5px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.18s;
+  }
+  .nav-special-btn:hover { color: var(--text2); border-color: var(--border2); background: rgba(255,255,255,0.02); }
+  .nav-special-btn.active { color: var(--cyan); border-color: rgba(78,205,196,0.35); background: rgba(78,205,196,0.06); }
+
+  /* ─── MAIN ─── */
+  #main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Top bar */
+  .topbar {
+    position: sticky;
+    top: 0;
+    background: rgba(8,14,26,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 50;
+  }
+  .breadcrumb {
+    font-size: 12px;
+    color: var(--text3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .breadcrumb span { color: var(--text2); }
+  .breadcrumb .sep { opacity: 0.3; }
+
+  .topbar-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+  }
+  .btn-sm {
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text2);
+    font-family: var(--font);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .btn-sm:hover { border-color: var(--border2); color: var(--text); }
+  .btn-sm.primary { background: rgba(99,157,255,0.15); border-color: rgba(99,157,255,0.35); color: var(--blue); }
+
+  /* Content area */
+  #content {
+    padding: 0;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ─── OVERVIEW SECTION ─── */
+  .overview-hero {
+    padding: 40px 40px 32px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hero-title {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .hero-title span { color: var(--gold); }
+
+  .hero-sub {
+    color: var(--text3);
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    flex: 1;
+    min-width: 100px;
+  }
+  .stat-num { font-size: 22px; font-weight: 700; color: var(--blue); }
+  .stat-label { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+  /* File tree */
+  .tree-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .tree-header {
+    padding: 10px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--text3);
+    font-family: var(--mono);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tree-dot { width: 10px; height: 10px; border-radius: 50%; }
+  pre.tree-body {
+    padding: 16px 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.8;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  pre.tree-body .folder { color: var(--gold2); }
+  pre.tree-body .file-js { color: var(--blue); }
+  pre.tree-body .file-jsx { color: var(--cyan); }
+  pre.tree-body .comment { color: var(--text3); }
+
+  /* ─── FOLDER SECTION ─── */
+  .folder-section {
+    padding: 36px 40px;
+    border-bottom: 1px solid var(--border);
+    display: none;
+  }
+  .folder-section.visible { display: block; }
+
+  .folder-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .folder-icon-lg { font-size: 18px; }
+  .folder-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .folder-desc {
+    color: var(--text3);
+    font-size: 13px;
+    margin-bottom: 28px;
+    padding-left: 28px;
+    border-left: 3px solid var(--border2);
+    padding-top: 4px;
+    padding-bottom: 4px;
+    margin-left: 4px;
+  }
+
+  /* File card */
+  .file-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    overflow: hidden;
+    scroll-margin-top: 80px;
+    transition: border-color 0.2s;
+  }
+  .file-card:hover { border-color: var(--border2); }
+  .file-card.highlight { border-color: rgba(99,157,255,0.5); box-shadow: 0 0 0 3px rgba(99,157,255,0.08); }
+
+  .file-header {
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--surface);
+    border-bottom: 1px solid transparent;
+    transition: background 0.18s;
+  }
+  .file-header:hover { background: var(--surface2); }
+  .file-card.expanded .file-header { border-bottom-color: var(--border); }
+
+  .file-name {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .file-name .ext-js { color: var(--gold2); }
+  .file-name .ext-jsx { color: var(--cyan); }
+
+  .file-purpose-preview {
+    color: var(--text3);
+    font-size: 11.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+  }
+
+  .expand-icon {
+    margin-left: auto;
+    color: var(--text3);
+    font-size: 12px;
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .file-card.expanded .expand-icon { transform: rotate(90deg); }
+
+  .file-body {
+    display: none;
+    padding: 20px 22px;
+  }
+  .file-card.expanded .file-body { display: block; }
+
+  /* File body sections */
+  .section-block {
+    margin-bottom: 20px;
+  }
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .purpose-text {
+    color: var(--text2);
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .detail-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .detail-list li {
+    display: flex;
+    gap: 8px;
+    color: var(--text2);
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+  .detail-list li::before {
+    content: '▸';
+    color: var(--blue2);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .system-role-text {
+    color: var(--text2);
+    font-size: 12.5px;
+    line-height: 1.65;
+    background: rgba(99,157,255,0.06);
+    border-left: 3px solid var(--blue2);
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* Q&A */
+  .qa-block {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .qa-question {
+    padding: 10px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    background: rgba(240,180,41,0.04);
+    border-bottom: 1px solid transparent;
+    transition: background 0.18s;
+  }
+  .qa-question:hover { background: rgba(240,180,41,0.08); }
+  .qa-block.qa-open .qa-question { border-bottom-color: var(--border); }
+  .qa-q-icon {
+    background: rgba(240,180,41,0.15);
+    color: var(--gold2);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .qa-q-text {
+    font-size: 12.5px;
+    color: var(--text2);
+    font-weight: 500;
+    flex: 1;
+  }
+  .qa-toggle {
+    color: var(--text3);
+    font-size: 11px;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .qa-block.qa-open .qa-toggle { transform: rotate(90deg); }
+  .qa-answer {
+    display: none;
+    padding: 12px 14px 12px 38px;
+  }
+  .qa-block.qa-open .qa-answer { display: block; }
+  .qa-a-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    color: var(--green);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .qa-a-text {
+    font-size: 12.5px;
+    color: var(--text2);
+    line-height: 1.65;
+  }
+
+  /* Inline code */
+  code {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    background: rgba(99,157,255,0.1);
+    color: var(--cyan);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+
+  /* ─── KEY CONCEPTS SECTION ─── */
+  .concepts-section {
+    padding: 36px 40px;
+    display: none;
+  }
+  .concepts-section.visible { display: block; }
+
+  .concept-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .concept-header {
+    padding: 14px 18px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .concept-body {
+    padding: 18px 22px;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+
+  .concept-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  .concept-table th {
+    text-align: left;
+    padding: 8px 12px;
+    background: var(--bg3);
+    color: var(--text3);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  .concept-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: top;
+  }
+  .concept-table tr:last-child td { border-bottom: none; }
+  .concept-table td:first-child { color: var(--blue); font-family: var(--mono); font-size: 12px; }
+
+  .flow-box {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--text2);
+    line-height: 1.8;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  /* ─── SEARCH HIGHLIGHT ─── */
+  mark {
+    background: rgba(240,180,41,0.3);
+    color: var(--gold2);
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  /* ─── EMPTY STATE ─── */
+  .empty-state {
+    padding: 60px 40px;
+    text-align: center;
+    color: var(--text3);
+    display: none;
+  }
+  .empty-state.visible { display: block; }
+  .empty-state p { font-size: 14px; margin-top: 8px; }
+
+  /* ─── RESPONSIVE TOGGLE ─── */
+  #sidebarToggle {
+    display: none;
+    position: fixed;
+    bottom: 20px; right: 20px;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--blue2);
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 200;
+    box-shadow: 0 4px 16px rgba(74,128,232,0.4);
+  }
+
+  @media (max-width: 768px) {
+    :root { --sidebar-w: 260px; }
+    #sidebar { transform: translateX(-100%); }
+    #sidebar.open { transform: translateX(0); }
+    #main { margin-left: 0; }
+    #sidebarToggle { display: flex; align-items: center; justify-content: center; }
+    .overview-hero, .folder-section, .concepts-section { padding: 24px 20px; }
+    .topbar { padding: 10px 20px; }
+    .hero-title { font-size: 20px; }
+  }
+
+  /* Scrollbar global */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+  /* fade-in animation */
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .file-card, .concept-card { animation: fadeSlideUp 0.25s ease both; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<aside id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo"><span>elite</span>reserve</div>
+    <div class="project-badge">⚡ Discussion Guide</div>
+  </div>
+
+  <div class="search-wrap">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Search files, concepts..." autocomplete="off">
+    </div>
+    <div id="searchCount"></div>
+  </div>
+
+  <nav class="nav-scroll" id="navTree">
+    <!-- Overview -->
+    <div class="nav-special">
+      <button class="nav-special-btn active" onclick="showSection('overview')" id="nav-overview">
+        🗺️ Project Overview
+      </button>
+    </div>
+
+    <!-- Root -->
+    <div class="nav-folder" id="navfolder-root">
+      <button class="nav-folder-btn open" onclick="toggleFolder('root')">
+        <span class="folder-icon">📁</span> Root (src/)
+        <span class="chevron">▶</span>
+      </button>
+      <div class="nav-files open" id="navfiles-root">
+        <button class="nav-file-btn" onclick="showFile('App.js')" id="navbtn-App.js">App.js<span class="ext-badge">.js</span></button>
+        <button class="nav-file-btn" onclick="showFile('index.js')" id="navbtn-index.js">index.js<span class="ext-badge">.js</span></button>
+        <button class="nav-file-btn" onclick="showFile('utils-imageUrl.js')" id="navbtn-utils-imageUrl.js">utils/imageUrl.js<span class="ext-badge">.js</span></button>
+      </div>
+    </div>
+
+    <!-- Context -->
+    <div class="nav-folder" id="navfolder-context">
+      <button class="nav-folder-btn" onclick="toggleFolder('context')">
+        <span class="folder-icon">📁</span> context/
+        <span class="chevron">▶</span>
+      </button>
+      <div class="nav-files" id="navfiles-context">
+        <button class="nav-file-btn" onclick="showFile('AuthContext.js')" id="navbtn-AuthContext.js">AuthContext.js<span class="ext-badge">.js</span></button>
+      </div>
+    </div>
+
+    <!-- Services -->
+    <div class="nav-folder" id="navfolder-services">
+      <button class="nav-folder-btn" onclick="toggleFolder('services')">
+        <span class="folder-icon">📁</span> services/
+        <span class="chevron">▶</span>
+      </button>
+      <div class="nav-files" id="navfiles-services">
+        <button class="nav-file-btn" onclick="showFile('api.js')" id="navbtn-api.js">api.js<span class="ext-badge">.js</span></button>
+        <button class="nav-file-btn" onclick="showFile('customerApi.js')" id="navbtn-customerApi.js">customerApi.js<span class="ext-badge">.js</span></button>
+        <button class="nav-file-btn" onclick="showFile('apiManager.js')" id="navbtn-apiManager.js">apiManager.js<span class="ext-badge">.js</span></button>
+      </div>
+    </div>
+
+    <!-- Pages -->
+    <div class="nav-folder" id="navfolder-pages">
+      <button class="nav-folder-btn" onclick="toggleFolder('pages')">
+        <span class="folder-icon">📁</span> pages/
+        <span class="chevron">▶</span>
+      </button>
+      <div class="nav-files" id="navfiles-pages">
+        <button class="nav-file-btn" onclick="showFile('Home.jsx')" id="navbtn-Home.jsx">Home.jsx<span class="ext-badge">.jsx</span></button>
+        <button class="nav-file-btn" onclick="showFile('HotelDetail.jsx')" id="navbtn-HotelDetail.jsx">HotelDetail.jsx<span class="ext-badge">.jsx</span></button>
+        <button class="nav-file-btn" onclick="showFile('MyBookings.jsx')" id="navbtn-MyBookings.jsx">MyBookings.jsx<span class="ext-badge">.jsx</span></button>
+        <button class="nav-file-btn" onclick="showFile('SearchResults.jsx')" id="navbtn-SearchResults.jsx">SearchResults.jsx<span class="ext-badge">.jsx</span></button>
+        <button class="nav-file-btn" onclick="showFile('Login.js')" id="navbtn-Login.js">Login.js<span class="ext-badge">.js</span></button>
+        <button class="nav-file-btn" onclick="showFile('Signup.js')" id="navbtn-Signup.js">Signup.js<span class="ext-badge">.js</span></button>
+        <button class="nav-file-btn" onclick="showFile('AIAssistant.jsx')" id="navbtn-AIAssistant.jsx">AIAssistant.jsx<span class="ext-badge">.jsx</span></button>
+      </div>
+    </div>
+
+    <!-- Customer Components -->
+    <div class="nav-folder" id="navfolder-customer">
+      <button class="nav-folder-btn" onclick="toggleFolder('customer')">
+        <span class="folder-icon">📁</span> components/customer/
+        <span class="chevron">▶</span>
+      </button>
+      <div class="nav-files" id="navfiles-customer">
+        <button class="nav-file-btn" onclick="showFile('Navbar.jsx')" id="navbtn-Navbar.jsx">Navbar.jsx<span class="ext-badge">.jsx</span></button>
+        <button class="nav-file-btn" onclick="showFile('HotelCard.jsx')" id="navbtn-HotelCard.jsx">HotelCard.jsx<span class="ext-badge">.jsx</span></button>
+        <button class="nav-file-btn" onclick="showFile('BookingModal.jsx')" id="navbtn-BookingModal.jsx">BookingModal.jsx<span class="ext-badge">.jsx</span></button>
+        <button class="nav-file-btn" onclick="showFile('PaymentModal.jsx')" id="navbtn-PaymentModal.jsx">PaymentModal.jsx<span class="ext-badge">.jsx</span></button>
+        <button class="nav-file-btn" onclick="showFile('ExtensionModal.jsx')" id="navbtn-ExtensionModal.jsx">ExtensionModal.jsx<span class="ext-badge">.jsx</span></button>
+        <button class="nav-file-btn" onclick="showFile('FeedbackSection.jsx')" id="navbtn-FeedbackSection.jsx">FeedbackSection.jsx<span class="ext-badge">.jsx</span></button>
+        <button class="nav-file-btn" onclick="showFile('AdvertiseSection.jsx')" id="navbtn-AdvertiseSection.jsx">AdvertiseSection.jsx<span class="ext-badge">.jsx</span></button>
+        <button class="nav-file-btn" onclick="showFile('Footer.jsx')" id="navbtn-Footer.jsx">Footer.jsx<span class="ext-badge">.jsx</span></button>
+      </div>
+    </div>
+
+    <!-- AI Components -->
+    <div class="nav-folder" id="navfolder-ai">
+      <button class="nav-folder-btn" onclick="toggleFolder('ai')">
+        <span class="folder-icon">📁</span> components/ai/
+        <span class="chevron">▶</span>
+      </button>
+      <div class="nav-files" id="navfiles-ai">
+        <button class="nav-file-btn" onclick="showFile('AiChatWidget.jsx')" id="navbtn-AiChatWidget.jsx">AiChatWidget.jsx<span class="ext-badge">.jsx</span></button>
+        <button class="nav-file-btn" onclick="showFile('aiService.js')" id="navbtn-aiService.js">aiService.js<span class="ext-badge">.js</span></button>
+      </div>
+    </div>
+
+    <!-- Manager Components -->
+    <div class="nav-folder" id="navfolder-manager">
+      <button class="nav-folder-btn" onclick="toggleFolder('manager')">
+        <span class="folder-icon">📁</span> components/manager_2/
+        <span class="chevron">▶</span>
+      </button>
+      <div class="nav-files" id="navfiles-manager">
+        <button class="nav-file-btn" onclick="showFile('ManagerHotels.js')" id="navbtn-ManagerHotels.js">ManagerHotels.js<span class="ext-badge">.js</span></button>
+        <button class="nav-file-btn" onclick="showFile('ManagerDashboard.jsx')" id="navbtn-ManagerDashboard.jsx">ManagerDashboard.jsx<span class="ext-badge">.jsx</span></button>
+        <button class="nav-file-btn" onclick="showFile('ManagerRoomsTab.js')" id="navbtn-ManagerRoomsTab.js">ManagerRoomsTab.js<span class="ext-badge">.js</span></button>
+        <button class="nav-file-btn" onclick="showFile('ManagerRoomTypesTab.js')" id="navbtn-ManagerRoomTypesTab.js">ManagerRoomTypesTab.js<span class="ext-badge">.js</span></button>
+        <button class="nav-file-btn" onclick="showFile('ManagerBookingsTab.js')" id="navbtn-ManagerBookingsTab.js">ManagerBookingsTab.js<span class="ext-badge">.js</span></button>
+        <button class="nav-file-btn" onclick="showFile('ManagerBasePricesTab.js')" id="navbtn-ManagerBasePricesTab.js">ManagerBasePricesTab.js<span class="ext-badge">.js</span></button>
+        <button class="nav-file-btn" onclick="showFile('ManagerPricingRulesTab.js')" id="navbtn-ManagerPricingRulesTab.js">ManagerPricingRulesTab.js<span class="ext-badge">.js</span></button>
+        <button class="nav-file-btn" onclick="showFile('ManagerNavbar.js')" id="navbtn-ManagerNavbar.js">ManagerNavbar.js<span class="ext-badge">.js</span></button>
+        <button class="nav-file-btn" onclick="showFile('ManagerFooter.js')" id="navbtn-ManagerFooter.js">ManagerFooter.js<span class="ext-badge">.js</span></button>
+      </div>
+    </div>
+
+    <!-- Key Concepts -->
+    <div class="nav-special" style="margin-top:8px;">
+      <button class="nav-special-btn" onclick="showSection('concepts')" id="nav-concepts">
+        🧠 Key Technical Concepts
+      </button>
+    </div>
+  </nav>
+</aside>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<main id="main">
+
+  <div class="topbar">
+    <div class="breadcrumb" id="breadcrumb">
+      <span>elitereserve-frontend</span>
+      <span class="sep">/</span>
+      <span>src</span>
+      <span class="sep">/</span>
+      <span>Overview</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn-sm" onclick="expandAll()">Expand All</button>
+      <button class="btn-sm" onclick="collapseAll()">Collapse All</button>
+      <button class="btn-sm primary" onclick="showSection('concepts')">🧠 Key Concepts</button>
+    </div>
+  </div>
+
+  <div id="content">
+
+    <!-- ═══ OVERVIEW ═══ -->
+    <div id="section-overview" class="folder-section visible">
+      <div class="overview-hero">
+        <div class="hero-title"><span>elite</span>reserve Frontend — <span style="color:var(--text)">Discussion Guide</span></div>
+        <div class="hero-sub">React SPA · University Project Defense · src/ Documentation</div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-num" style="color:var(--cyan)">28</div><div class="stat-label">Documented Files</div></div>
+          <div class="stat-card"><div class="stat-num" style="color:var(--gold)">7</div><div class="stat-label">Folders</div></div>
+          <div class="stat-card"><div class="stat-num" style="color:var(--green)">56+</div><div class="stat-label">Q&A Pairs</div></div>
+          <div class="stat-card"><div class="stat-num" style="color:var(--purple)">5</div><div class="stat-label">Key Concepts</div></div>
+        </div>
+        <div class="tree-card">
+          <div class="tree-header">
+            <div class="tree-dot" style="background:#ff5f57"></div>
+            <div class="tree-dot" style="background:#ffbd2e"></div>
+            <div class="tree-dot" style="background:#28c840"></div>
+            <span style="margin-left:4px">src/ — Project Structure</span>
+          </div>
+          <pre class="tree-body"><span class="folder">src/</span>
+├── <span class="file-js">App.js</span>                          <span class="comment"># Root component — routing, layouts, guards</span>
+├── <span class="file-js">index.js</span>                        <span class="comment"># React entry point</span>
+│
+├── <span class="folder">context/</span>
+│   └── <span class="file-js">AuthContext.js</span>              <span class="comment"># Authentication state management</span>
+│
+├── <span class="folder">services/</span>
+│   ├── <span class="file-js">api.js</span>                      <span class="comment"># Base Axios instance + auth API</span>
+│   ├── <span class="file-js">customerApi.js</span>              <span class="comment"># Customer-facing API endpoints</span>
+│   └── <span class="file-js">apiManager.js</span>               <span class="comment"># Manager-facing API endpoints</span>
+│
+├── <span class="folder">utils/</span>
+│   └── <span class="file-js">imageUrl.js</span>                 <span class="comment"># Image URL resolver utility</span>
+│
+├── <span class="folder">pages/</span>
+│   ├── <span class="file-jsx">Home.jsx</span>                    <span class="comment"># Landing page with hotel listings</span>
+│   ├── <span class="file-jsx">HotelDetail.jsx</span>             <span class="comment"># Single hotel view + room types</span>
+│   ├── <span class="file-jsx">MyBookings.jsx</span>              <span class="comment"># Customer booking history</span>
+│   ├── <span class="file-jsx">SearchResults.jsx</span>           <span class="comment"># Hotel search results</span>
+│   ├── <span class="file-js">Login.js</span>                    <span class="comment"># Login page</span>
+│   ├── <span class="file-js">Signup.js</span>                   <span class="comment"># Registration page</span>
+│   └── <span class="file-jsx">AIAssistant.jsx</span>             <span class="comment"># AI chat page wrapper</span>
+│
+├── <span class="folder">components/customer/</span>
+│   ├── <span class="file-jsx">Navbar.jsx</span>                  <span class="comment"># Customer navigation + search modal</span>
+│   ├── <span class="file-jsx">HotelCard.jsx</span>               <span class="comment"># Hotel listing card</span>
+│   ├── <span class="file-jsx">BookingModal.jsx</span>            <span class="comment"># Booking creation modal</span>
+│   ├── <span class="file-jsx">PaymentModal.jsx</span>            <span class="comment"># Payment processing modal</span>
+│   ├── <span class="file-jsx">ExtensionModal.jsx</span>          <span class="comment"># Booking extension modal</span>
+│   ├── <span class="file-jsx">FeedbackSection.jsx</span>         <span class="comment"># Customer reviews section</span>
+│   ├── <span class="file-jsx">AdvertiseSection.jsx</span>        <span class="comment"># Marketing/hero section</span>
+│   └── <span class="file-jsx">Footer.jsx</span>                  <span class="comment"># Customer footer</span>
+│
+├── <span class="folder">components/ai/</span>
+│   ├── <span class="file-jsx">AiChatWidget.jsx</span>            <span class="comment"># AI chat floating widget</span>
+│   └── <span class="file-js">aiService.js</span>                <span class="comment"># AI backend communication</span>
+│
+└── <span class="folder">components/manager_2/</span>
+    ├── <span class="file-js">ManagerHotels.js</span>            <span class="comment"># Hotel CRUD for managers</span>
+    ├── <span class="file-jsx">ManagerDashboard.jsx</span>        <span class="comment"># Hotel management dashboard</span>
+    ├── <span class="file-js">ManagerRoomsTab.js</span>          <span class="comment"># Room management tab</span>
+    ├── <span class="file-js">ManagerRoomTypesTab.js</span>      <span class="comment"># Room type management tab</span>
+    ├── <span class="file-js">ManagerBookingsTab.js</span>       <span class="comment"># Booking overview tab</span>
+    ├── <span class="file-js">ManagerBasePricesTab.js</span>     <span class="comment"># Base pricing tab</span>
+    ├── <span class="file-js">ManagerPricingRulesTab.js</span>   <span class="comment"># Dynamic pricing rules tab</span>
+    ├── <span class="file-js">ManagerNavbar.js</span>            <span class="comment"># Manager navigation bar</span>
+    └── <span class="file-js">ManagerFooter.js</span>            <span class="comment"># Manager footer</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ ROOT FILES ═══ -->
+    <div id="section-root" class="folder-section">
+      <div class="folder-heading">
+        <span class="folder-icon-lg">📁</span>
+        <span class="folder-title">Root Files <span style="color:var(--text3);font-size:14px;font-weight:400">(src/)</span></span>
+      </div>
+      <div class="folder-desc">Entry points and utility files that initialize the React application, define global routing, and provide shared helper functions.</div>
+
+      <!-- App.js -->
+      <div class="file-card" id="card-App.js">
+        <div class="file-header" onclick="toggleCard('App.js')">
+          <span>📄</span>
+          <span class="file-name"><span class="ext-js">App.js</span></span>
+          <span class="file-purpose-preview">Root component — routing, layouts, role-based guards</span>
+          <span class="expand-icon">▶</span>
+        </div>
+        <div class="file-body">
+          <div class="section-block">
+            <div class="section-label">Purpose</div>
+            <div class="purpose-text">The root component that defines the entire application routing structure, layout composition, and role-based access control. It is the single entry point that orchestrates which pages and layouts render based on authentication state and user roles.</div>
+          </div>
+          <div class="section-block">
+            <div class="section-label">Internal Details</div>
+            <ul class="detail-list">
+              <li>Uses <code>react-router-dom</code> v6 with <code>BrowserRouter</code>, <code>Routes</code>, <code>Route</code>, <code>Navigate</code>, and <code>Outlet</code></li>
+              <li>Defines two layout wrappers: <code>CustomerLayout</code> (wraps with CustomerNavbar + CustomerFooter) and <code>ManagerLayout</code> (wraps with ManagerNavbar + ManagerFooter)</li>
+              <li>Implements three route guards: <code>CustomerGuard</code>, <code>ManagerGuard</code>, and <code>PublicRoute</code></li>
+              <li>Helper function <code>checkIsManager(user)</code> inspects <code>user.roles</code> array for <code>'HOTEL_MANAGER'</code> or <code>'ADMIN'</code></li>
+              <li>All guards show a loading spinner while <code>AuthContext</code> resolves the user session</li>
+              <li>Routes: Public (<code>/login</code>, <code>/signup</code>) · Customer (<code>/</code>, <code>/hotel/:id</code>, <code>/bookings</code>, <code>/search</code>, <code>/ai</code>) · Manager (<code>/manager-hotels</code>, <code>/manager-dashboard/:hotelId</code>) · Catch-all → <code>/login</code></li>
+            </ul>
+          </div>
+          <div class="section-block">
+            <div class="section-label">System Role</div>
+            <div class="system-role-text">This is the architectural backbone. Every page in the app is rendered through this file's routing tree. The guard pattern ensures security at the frontend level, complementing backend JWT validation.</div>
+          </div>
+          <div class="section-block">
+            <div class="section-label">Discussion Q&A</div>
+            <div class="qa-block">
+              <div class="qa-question" onclick="toggleQA(this)">
+                <span class="qa-q-icon">Q</span>
+                <span class="qa-q-text">Why use route guards instead of checking roles inside each page component?</span>
+                <span class="qa-toggle">▶</span>
+              </div>
+              <div class="qa-answer">
+                <div class="qa-a-icon">✅ Answer</div>
+                <div class="qa-a-text">Centralizing access control in guards follows the Single Responsibility Principle. Pages focus on their UI logic, while guards handle authorization. This prevents code duplication and ensures no page accidentally renders without proper auth checks.</div>
+              </div>
+            </div>
+            <div class="qa-block">
+              <div class="qa-question" onclick="toggleQA(this)">
+                <span class="qa-q-icon">Q</span>
+                <span class="qa-q-text">What happens if a manager tries to access a customer route like <code>/bookings</code>?</span>
+                <span class="qa-toggle">▶</span>
+              </div>
+              <div class="qa-answer">
+                <div class="qa-a-icon">✅ Answer</div>
+                <div class="qa-a-text">The <code>CustomerGuard</code> checks <code>checkIsManager(user)</code> — if true, it returns <code>&lt;Navigate to="/manager-hotels" replace /&gt;</code>, redirecting the manager to their portal. The reverse applies for customers trying to access manager routes.</div>
+              </div>
+            </div>
+            <div class="qa-block">
+              <div class="qa-question" onclick="toggleQA(this)">
+                <span class="qa-q-icon">Q</span>
+                <span class="qa-q-text">Why wrap the entire app in <code>&lt;AuthProvider&gt;</code>?</span>
+                <span class="qa-toggle">▶</span>
+              </div>
+              <div class="qa-answer">
+                <div class="qa-a-icon">✅ Answer</div>
+                <div class="qa-a-text">The <code>AuthProvider</code> uses React Context to make authentication state (<code>user</code>, <code>isAuthenticated</code>, <code>loading</code>) available to every component in the tree without prop drilling. Guards, navbars, and pages all consume this context.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- index.js -->
+      <div class="file-card" id="card-index.js">
+        <div class="file-header" onclick="toggleCard('index.js')">
+          <span>📄</span>
+          <span class="file-name"><span class="ext-js">index.js</span></span>
+          <span class="file-purpose-preview">React entry point — mounts app into the DOM</span>
+          <span class="expand-icon">▶</span>
+        </div>
+        <div class="file-body">
+          <div class="section-block">
+            <div class="section-label">Purpose</div>
+            <div class="purpose-text">The JavaScript entry point that mounts the React application into the DOM.</div>
+          </div>
+          <div class="section-block">
+            <div class="section-label">Internal Details</div>
+            <ul class="detail-list">
+              <li>Uses <code>ReactDOM.createRoot()</code> — React 18 concurrent mode API</li>
+              <li>Wraps <code>&lt;App /&gt;</code> in <code>&lt;React.StrictMode&gt;</code> for development warnings</li>
+              <li>Targets <code>document.getElementById('root')</code> in <code>public/index.html</code></li>
+            </ul>
+          </div>
+          <div class="section-block">
+            <div class="section-label">System Role</div>
+            <div class="system-role-text">Standard React bootstrapping file. No custom logic — its role is purely to initialize the React tree.</div>
+          </div>
+          <div class="section-block">
+            <div class="section-label">Discussion Q&A</div>
+            <div class="qa-block">
+              <div class="qa-question" onclick="toggleQA(this)">
+                <span class="qa-q-icon">Q</span>
+                <span class="qa-q-text">What does <code>React.StrictMode</code> do?</span>
+                <span class="qa-toggle">▶</span>
+              </div>
+              <div class="qa-answer">
+                <div class="qa-a-icon">✅ Answer</div>
+                <div class="qa-a-text">It activates additional development-only checks: detecting unsafe lifecycle methods, warning about legacy APIs, and double-invoking certain functions to detect side effects. It has zero impact in production builds.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- utils/imageUrl.js -->
+      <div class="file-card" id="card-utils-imageUrl.js">
+        <div class="file-header" onclick="toggleCard('utils-imageUrl.js')">
+          <span>📄</span>
+          <span class="file-name"><span class="ext-js">utils/imageUrl.js</span></span>
+          <span class="file-purpose-preview">Resolves relative image paths to full backend URLs</span>
+          <span class="expand-icon">▶</span>
+        </div>
+        <div class="file-body">
+          <div class="section-block">
+            <div class="section-label">Purpose</div>
+            <div class="purpose-text">A utility function that resolves image URLs by prepending the backend base URL to relative paths stored in the database.</div>
+          </div>
+          <div class="section-block">
+            <div class="section-label">Internal Details</div>
+            <ul class="detail-list">
+              <li>Exports <code>getImageUrl(url)</code> function</li>
+              <li>Logic: if <code>url</code> is falsy → returns empty string; if starts with <code>'http'</code> → returns as-is; otherwise → prepends <code>http://localhost:8080</code></li>
+              <li>Solves mismatch where DB stores relative paths like <code>/images/hotels/h1.avif</code> but React dev server runs on a different port</li>
+            </ul>
+          </div>
+          <div class="section-block">
+            <div class="section-label">System Role</div>
+            <div class="system-role-text">Used by HotelCard, HotelDetail, ManagerHotels, and ManagerRoomTypesTab to correctly resolve image sources. Without this utility, all hotel images would 404.</div>
+          </div>
+          <div class="section-block">
+            <div class="section-label">Discussion Q&A</div>
+            <div class="qa-block">
+              <div class="qa-question" onclick="toggleQA(this)">
+                <span class="qa-q-icon">Q</span>
+                <span class="qa-q-text">Why not use a proxy configuration in the React dev server instead?</span>
+                <span class="qa-toggle">▶</span>
+              </div>
+              <div class="qa-answer">
+                <div class="qa-a-icon">✅ Answer</div>
+                <div class="qa-a-text">A proxy can be unreliable for static assets. The explicit URL resolution is more transparent, works in all environments, and makes the dependency on the backend URL visible in code.</div>
+              </div>
+            </div>
+            <div class="qa-block">
+              <div class="qa-question" onclick="toggleQA(this)">
+                <span class="qa-q-icon">Q</span>
+                <span class="qa-q-text">What would you change for production deployment?</span>
+                <span class="qa-toggle">▶</span>
+              </div>
+              <div class="qa-answer">
+                <div class="qa-a-icon">✅ Answer</div>
+                <div class="qa-a-text">Replace the hardcoded <code>http://localhost:8080</code> with an environment variable (<code>process.env.REACT_APP_API_URL</code>) so the same build works across dev, staging, and production environments.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ CONTEXT ═══ -->
+    <div id="section-context" class="folder-section">
+      <div class="folder-heading"><span class="folder-icon-lg">📁</span><span class="folder-title">context/</span></div>
+      <div class="folder-desc">Provides global application state using React Context API — specifically authentication state that needs to be accessible from any component in the tree.</div>
+
+      <div class="file-card" id="card-AuthContext.js">
+        <div class="file-header" onclick="toggleCard('AuthContext.js')">
+          <span>📄</span><span class="file-name"><span class="ext-js">AuthContext.js</span></span>
+          <span class="file-purpose-preview">Manages login, logout, registration, token refresh, and session persistence</span>
+          <span class="expand-icon">▶</span>
+        </div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Purpose</div><div class="purpose-text">Manages the entire authentication lifecycle: login, registration, logout, session persistence, and token refresh event handling. Exposes auth state and actions to the entire component tree via React Context.</div></div>
+          <div class="section-block"><div class="section-label">Internal Details</div>
+            <ul class="detail-list">
+              <li>Creates <code>AuthContext</code> with <code>createContext(null)</code></li>
+              <li>State: <code>user</code> (current user object), <code>loading</code> (true while checking stored token), <code>isAuthenticated</code> (boolean)</li>
+              <li>On mount, calls <code>checkAuth()</code>: reads <code>accessToken</code> from localStorage, calls <code>authAPI.getCurrentUser()</code> to validate</li>
+              <li>Listens for custom <code>'auth:logout'</code> DOM event (dispatched by API interceptors on refresh failure)</li>
+              <li>Exposes: <code>login(email, password)</code>, <code>register(userData)</code>, <code>logout()</code></li>
+              <li>Custom hook <code>useAuth()</code> provides type-safe context consumption</li>
+            </ul>
+          </div>
+          <div class="section-block"><div class="section-label">System Role</div><div class="system-role-text">Every protected route guard consumes this context. The Navbar uses it for user display. Login/Signup pages call its methods. This is the single source of truth for "who is the current user?"</div></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why store tokens in localStorage instead of httpOnly cookies?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">localStorage allows the SPA to attach the JWT in the <code>Authorization</code> header for API calls. httpOnly cookies require CSRF token handling. For a university project with separate frontend/backend, localStorage + Bearer tokens is the standard SPA pattern. In production, httpOnly cookies with CSRF protection would be more secure against XSS.</div></div></div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">What happens when the access token expires mid-session?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">The API interceptor catches 401 responses, uses the stored refresh token to obtain a new access token, retries the failed request, and updates localStorage. If the refresh also fails, it dispatches the <code>'auth:logout'</code> event which AuthContext listens for, clearing the session.</div></div></div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why use a custom event (<code>auth:logout</code>) instead of calling logout directly?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">The API interceptor lives outside the React component tree — it cannot call React hooks or context methods directly. The custom DOM event bridges this gap: the interceptor dispatches it, and the AuthProvider's useEffect listener handles the state cleanup.</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SERVICES ═══ -->
+    <div id="section-services" class="folder-section">
+      <div class="folder-heading"><span class="folder-icon-lg">📁</span><span class="folder-title">services/</span></div>
+      <div class="folder-desc">Contains all HTTP communication logic. Each file creates an Axios instance with interceptors for JWT attachment and automatic token refresh. Endpoints are organized by user role.</div>
+
+      <div class="file-card" id="card-api.js">
+        <div class="file-header" onclick="toggleCard('api.js')"><span>📄</span><span class="file-name"><span class="ext-js">api.js</span></span><span class="file-purpose-preview">Base Axios instance + auth API + token refresh interceptor</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Purpose</div><div class="purpose-text">The base API service used for authentication-related endpoints. Creates the foundational Axios instance with request/response interceptors that handle JWT token management.</div></div>
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Base URL: <code>http://localhost:8080</code></li>
+            <li>Request interceptor: attaches <code>Bearer {token}</code> from localStorage to every request</li>
+            <li>Response interceptor: on 401 → checks if refreshing → calls <code>/api/auth/refresh</code> → updates tokens → retries original request</li>
+            <li>Subscriber queue: prevents multiple simultaneous refresh calls via <code>refreshSubscribers[]</code></li>
+            <li>Exports: <code>login()</code>, <code>register()</code>, <code>logout()</code>, <code>getCurrentUser()</code>, <code>refreshToken()</code></li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why have three separate Axios instances instead of one shared instance?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">Separation of concerns — each instance can have different base configurations if needed (e.g., different timeouts, headers for multipart uploads). It also makes the codebase more modular: customer APIs, manager APIs, and auth APIs are independently maintainable.</div></div></div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Explain the subscriber pattern in the refresh interceptor.</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">When multiple API calls fail simultaneously with 401, only the first triggers a refresh. Subsequent calls are queued in <code>refreshSubscribers[]</code>. Once the refresh completes, <code>onTokenRefreshed()</code> iterates the queue providing the new token so each queued request can retry. This prevents multiple simultaneous refresh calls.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-customerApi.js">
+        <div class="file-header" onclick="toggleCard('customerApi.js')"><span>📄</span><span class="file-name"><span class="ext-js">customerApi.js</span></span><span class="file-purpose-preview">Hotels, rooms, bookings, payments, feedback endpoints</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Purpose</div><div class="purpose-text">Provides all API endpoints accessible to customer-role users: hotels, room types, bookings, payments, and feedback.</div></div>
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li><code>hotelAPI</code>: <code>getAllHotels(page, size)</code>, <code>getHotelById(id)</code>, <code>searchHotels(searchRequest)</code></li>
+            <li><code>roomTypeAPI</code>: <code>getRoomTypesByHotel(hotelId)</code>, <code>getRoomTypeById(id)</code></li>
+            <li><code>bookingAPI</code>: <code>createBooking(data)</code>, <code>cancelBooking(id)</code>, <code>getMyHistory()</code>, <code>requestExtension()</code>, <code>confirmExtensionPayment()</code></li>
+            <li><code>paymentAPI</code>: <code>createPayment(paymentData)</code></li>
+            <li><code>feedbackAPI</code>: <code>createFeedback(data)</code>, <code>getAllFeedbacks(page, size)</code></li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why does <code>searchHotels</code> use POST instead of GET?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">The search request contains a complex object with multiple optional filters (name, city, minRating, maxRating, pagination, sorting). Using POST with a JSON body is cleaner than encoding all these as query parameters, especially when values can be null. The backend expects a <code>@RequestBody</code> DTO.</div></div></div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">How does the booking flow work end-to-end?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">1) User selects dates in BookingModal → 2) <code>createBooking()</code> sends hotel/room/dates to backend → 3) Backend calculates price with dynamic pricing rules and returns booking with <code>quotedPrice</code> → 4) User proceeds to PaymentModal → 5) <code>createPayment()</code> confirms the booking. The price is calculated server-side to prevent manipulation.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-apiManager.js">
+        <div class="file-header" onclick="toggleCard('apiManager.js')"><span>📄</span><span class="file-name"><span class="ext-js">apiManager.js</span></span><span class="file-purpose-preview">Hotel CRUD, rooms, room types, pricing rules, base prices</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Purpose</div><div class="purpose-text">Provides all API endpoints for hotel manager operations: hotel CRUD, room management, room types, bookings overview, base prices, and pricing rules.</div></div>
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Hotels: <code>getMyHotels()</code>, <code>createHotel(formData)</code>, <code>updateHotel(id, formData)</code>, <code>deleteHotel(id)</code></li>
+            <li>Rooms: <code>getHotelRooms()</code>, <code>createRoom()</code>, <code>patchRoom()</code>, <code>deleteRoom()</code></li>
+            <li>Room Types: <code>getHotelRoomTypes()</code>, <code>createRoomType(formData)</code>, <code>patchRoomType()</code>, <code>deleteRoomType()</code></li>
+            <li>Pricing Rules: <code>createPricingRule()</code>, <code>patchPricingRule()</code>, <code>deletePricingRule()</code>, <code>assignRuleToRoomTypes()</code></li>
+            <li>Base Prices: <code>setBasePrice()</code>, <code>patchBasePrice()</code>, <code>deleteBasePrice()</code></li>
+            <li>Hotel create/update use <code>multipart/form-data</code> for image upload</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why use <code>multipart/form-data</code> for hotel creation?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">Hotels include an image file upload alongside text fields. <code>multipart/form-data</code> is the standard encoding for forms that include binary file data. The Axios instance overrides the default <code>application/json</code> content-type header for these specific calls.</div></div></div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">What's the difference between <code>patchRoom</code> and <code>updateHotel</code>?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text"><code>patchRoom</code> uses HTTP PATCH (partial update — only send changed fields), while <code>updateHotel</code> uses HTTP PUT (full replacement). This follows REST conventions: PATCH for partial modifications, PUT for complete resource replacement.</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PAGES ═══ -->
+    <div id="section-pages" class="folder-section">
+      <div class="folder-heading"><span class="folder-icon-lg">📁</span><span class="folder-title">pages/</span></div>
+      <div class="folder-desc">Top-level page components that correspond to routes defined in App.js. Each page represents a full screen view and composes smaller components.</div>
+
+      <div class="file-card" id="card-Home.jsx">
+        <div class="file-header" onclick="toggleCard('Home.jsx')"><span>📄</span><span class="file-name"><span class="ext-jsx">Home.jsx</span></span><span class="file-purpose-preview">Landing page — paginated hotel grid, hero section, feedback</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Purpose</div><div class="purpose-text">The main landing page that displays featured hotels in a paginated grid, a hero section with platform statistics, feature highlights, an advertising section, and customer feedback.</div></div>
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>State: <code>hotels[]</code>, <code>loading</code>, <code>error</code>, <code>page</code>, <code>totalPages</code>, <code>searchParams</code></li>
+            <li>On mount + page change: calls <code>hotelAPI.getAllHotels(page, 8)</code></li>
+            <li>Renders: Hero → AdvertiseSection → Hotels Grid → Pagination → FeedbackSection</li>
+            <li>Pagination: Previous/Next + numbered page buttons with smart windowing around current page</li>
+            <li>Stores <code>searchParams</code> in localStorage for use by HotelDetail when creating bookings</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why store searchParams in localStorage?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">When navigating from Home to HotelDetail and opening the BookingModal, the modal pre-fills check-in/check-out dates from these stored params. localStorage persists across page navigations without needing to pass props through the route.</div></div></div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">How does pagination work with the backend?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">The backend returns a Spring Data <code>Page</code> object with <code>content[]</code>, <code>totalPages</code>, <code>pageNumber</code>. The frontend tracks <code>page</code> state, passes it to the API call, and renders navigation controls. Each page change triggers a new API call — this is server-side pagination, not client-side.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-HotelDetail.jsx">
+        <div class="file-header" onclick="toggleCard('HotelDetail.jsx')"><span>📄</span><span class="file-name"><span class="ext-jsx">HotelDetail.jsx</span></span><span class="file-purpose-preview">Single hotel view — room types, amenities, booking trigger</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Purpose</div><div class="purpose-text">Displays comprehensive information about a single hotel: hero image, rating, room types with amenities and pricing, and a booking flow.</div></div>
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Extracts <code>id</code> from URL params via <code>useParams()</code></li>
+            <li>Fetches hotel data + room types in parallel: <code>hotelAPI.getHotelById(id)</code> + <code>roomTypeAPI.getRoomTypesByHotel(id)</code></li>
+            <li>Each room type card shows: name, capacity, base price, amenities, "Reserve" button</li>
+            <li>Clicking "Reserve" opens <code>BookingModal</code> with the selected room type</li>
+            <li>Reads <code>searchParams</code> from localStorage to pass check-in/check-out defaults</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why fetch hotel and room types separately?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">The backend follows RESTful resource separation — hotels and room types are different entities with different endpoints. Fetching them in parallel is still fast, and it allows room types to be reused independently (e.g., in manager views).</div></div></div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">How is the price displayed before booking?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">The room type card shows the <code>basePrice</code> from the room type entity. The actual booking price (which includes dynamic pricing rules) is calculated server-side only when the booking is created. The BookingModal shows the final <code>quotedPrice</code> returned by the backend.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-MyBookings.jsx">
+        <div class="file-header" onclick="toggleCard('MyBookings.jsx')"><span>📄</span><span class="file-name"><span class="ext-jsx">MyBookings.jsx</span></span><span class="file-purpose-preview">Booking history — cancel, extend, pay actions</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Purpose</div><div class="purpose-text">Displays the authenticated customer's booking history with status indicators, and provides actions: cancel, extend, and pay.</div></div>
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Fetches bookings via <code>bookingAPI.getMyHistory()</code> on mount</li>
+            <li>Status-based styling via <code>getStatusStyle(status)</code> for CONFIRMED, PENDING, CANCELLED, COMPLETED, EXPIRED</li>
+            <li>PENDING: "Pay Now" → opens PaymentModal; CONFIRMED: "Cancel" + "Extend"</li>
+            <li>After any action, calls <code>fetchBookings()</code> to refresh the list</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">What's the booking lifecycle?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">PENDING (created, awaiting payment) → CONFIRMED (paid) → COMPLETED (after checkout date) or CANCELLED (user cancelled). Extensions create a sub-entity linked to the booking. EXPIRED occurs if payment isn't made within a time window.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-SearchResults.jsx">
+        <div class="file-header" onclick="toggleCard('SearchResults.jsx')"><span>📄</span><span class="file-name"><span class="ext-jsx">SearchResults.jsx</span></span><span class="file-purpose-preview">Displays hotel search results from URL query params</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Purpose</div><div class="purpose-text">Displays hotel search results based on query parameters from the Navbar search modal, with active filter display and pagination.</div></div>
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Reads query params from URL: <code>name</code>, <code>city</code>, <code>minRating</code>, <code>maxRating</code></li>
+            <li>Calls <code>hotelAPI.searchHotels(searchRequest)</code> with a POST body containing filters + pagination + sorting</li>
+            <li>Displays active filter tags with a "Clear All" button</li>
+            <li>Re-searches when <code>location.search</code> changes via <code>useEffect</code> dependency</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why use URL query params instead of component state for search filters?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">URL params make search results bookmarkable and shareable. Users can copy the URL, use browser back/forward, or refresh without losing their search. The Navbar constructs the URL with <code>URLSearchParams</code>, and this page reads them — clean separation of concerns.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-Login.js">
+        <div class="file-header" onclick="toggleCard('Login.js')"><span>📄</span><span class="file-name"><span class="ext-js">Login.js</span></span><span class="file-purpose-preview">Auth page — email/password form, role-based redirect</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>State: <code>formData</code> (email, password), <code>error</code>, <code>loading</code>, <code>rememberMe</code></li>
+            <li>Validates email format with regex and checks for empty fields</li>
+            <li>Calls <code>login(email, password)</code> from <code>useAuth()</code> context</li>
+            <li>After login: managers → <code>/manager-hotels</code>, customers → <code>/</code></li>
+            <li>Uses <code>window.location.href</code> for redirect (full page reload to ensure clean state)</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why use <code>window.location.href</code> instead of <code>navigate()</code> for post-login redirect?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">A full page reload ensures the AuthProvider re-initializes with the new token, all components re-mount with fresh auth state, and any stale cached data is cleared. Using <code>navigate()</code> might leave some components in a pre-auth state.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-Signup.js">
+        <div class="file-header" onclick="toggleCard('Signup.js')"><span>📄</span><span class="file-name"><span class="ext-js">Signup.js</span></span><span class="file-purpose-preview">Registration page — form validation, password strength, role selection</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Password strength calculator: checks length ≥8, lowercase, uppercase, digits — each adds 25%</li>
+            <li>Visual strength bar: red (Weak) → amber (Fair) → green (Good) → blue (Strong)</li>
+            <li>Role dropdown: <code>CUSTOMER</code> (default) or <code>HOTEL_MANAGER</code></li>
+            <li>Calls <code>register(userData)</code> from <code>useAuth()</code> context</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Is client-side password strength validation sufficient?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">No — it's a UX enhancement only. The backend should enforce its own password policy (and does, via Spring Security's <code>BCryptPasswordEncoder</code>). Client-side validation provides immediate feedback but is never a security boundary.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-AIAssistant.jsx">
+        <div class="file-header" onclick="toggleCard('AIAssistant.jsx')"><span>📄</span><span class="file-name"><span class="ext-jsx">AIAssistant.jsx</span></span><span class="file-purpose-preview">Minimal wrapper — renders AI chat widget as full page</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Retrieves <code>accessToken</code> from localStorage</li>
+            <li>Renders <code>&lt;AiChatWidget token={token} /&gt;</code></li>
+            <li>Only 7 lines of code — purely a routing target</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why have both a floating widget and a dedicated page?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">The floating widget (rendered in Navbar) provides quick access from any page. The dedicated page offers a distraction-free, full-screen chat experience for longer conversations. Both use the same <code>AiChatWidget</code> component.</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ CUSTOMER COMPONENTS ═══ -->
+    <div id="section-customer" class="folder-section">
+      <div class="folder-heading"><span class="folder-icon-lg">📁</span><span class="folder-title">components/customer/</span></div>
+      <div class="folder-desc">Reusable UI components for the customer-facing side. Includes navigation, hotel cards, modals for booking/payment/extension, and content sections.</div>
+
+      <div class="file-card" id="card-Navbar.jsx">
+        <div class="file-header" onclick="toggleCard('Navbar.jsx')"><span>📄</span><span class="file-name"><span class="ext-jsx">Navbar.jsx</span></span><span class="file-purpose-preview">Customer navigation — search modal, user avatar, AI widget</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>State: <code>showSearch</code>, <code>searchFilters</code> (name, city, minRating, maxRating)</li>
+            <li>Search modal: full-screen overlay with fade+slide animation; 4 fields; Esc key / backdrop click closes</li>
+            <li>Auto-focuses first input on open; locks body scroll</li>
+            <li>User avatar: dynamic color based on name hash</li>
+            <li>Conditional rendering: Login/Register for unauthenticated; user info + My Bookings + Logout for authenticated</li>
+            <li>Renders <code>&lt;AiChatWidget&gt;</code> as a floating element</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why implement search as a modal instead of a separate page?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">A modal keeps the user in context — they don't lose their place on the current page. It's faster (no page load), feels more responsive, and follows the pattern of modern search UIs (Spotlight, Command+K). The actual results still navigate to a dedicated page.</div></div></div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">How does the keyboard shortcut (Esc) work?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">A <code>useEffect</code> hook adds a <code>keydown</code> event listener to <code>document</code>. When <code>showSearch</code> is true and <code>Escape</code> is pressed, it calls <code>closeSearch()</code>. The listener is cleaned up on unmount to prevent memory leaks.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-HotelCard.jsx">
+        <div class="file-header" onclick="toggleCard('HotelCard.jsx')"><span>📄</span><span class="file-name"><span class="ext-jsx">HotelCard.jsx</span></span><span class="file-purpose-preview">Hotel listing card — stars, badges, wishlist, CTA</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li><code>renderStars(rating)</code>: converts 0-10 rating to 5-star display with half-star support using SVG gradients</li>
+            <li><code>getBadgeStyle(badge)</code>: maps badge text to gradient colors</li>
+            <li>Wishlist toggle button (local state only — visual feedback, logs to console)</li>
+            <li><code>onError</code> handler on image: falls back to Unsplash placeholder</li>
+            <li>Entire card is clickable → navigates to <code>/hotel/${hotel.id}</code></li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">How does the half-star rating work?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">Rating (0-10) is divided by 2 to get a 0-5 scale. <code>Math.floor()</code> gives full stars, and checking <code>% 1 >= 0.5</code> determines if a half star is needed. Half stars use an SVG <code>linearGradient</code> with 50% gold / 50% transparent to visually split the star.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-BookingModal.jsx">
+        <div class="file-header" onclick="toggleCard('BookingModal.jsx')"><span>📄</span><span class="file-name"><span class="ext-jsx">BookingModal.jsx</span></span><span class="file-purpose-preview">Two-phase booking creation — date selection → price → payment</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Two-phase flow: Date selection → <code>createBooking()</code> → backend returns <code>quotedPrice</code> → "Continue to Payment" → renders PaymentModal</li>
+            <li>Date inputs: <code>onKeyDown</code> prevents manual typing; <code>onClick</code> opens native picker</li>
+            <li>Min date constraints: check-in ≥ today, check-out ≥ check-in + 1 day</li>
+            <li>Right panel shows booking summary: room type, capacity, base rate, dates, nights</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why not let the user see the final price before creating the booking?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">The backend applies complex dynamic pricing rules. Calculating this requires creating a booking entity server-side. The two-phase approach (create → show price → pay) ensures price accuracy while giving the user a chance to review before paying.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-PaymentModal.jsx">
+        <div class="file-header" onclick="toggleCard('PaymentModal.jsx')"><span>📄</span><span class="file-name"><span class="ext-jsx">PaymentModal.jsx</span></span><span class="file-purpose-preview">Payment processing — Credit Card, PayPal, Bank Transfer</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Three payment methods: <code>CREDIT_CARD</code>, <code>PAYPAL</code>, <code>BANK_TRANSFER</code></li>
+            <li>Card number: auto-formats with spaces every 4 digits; CVV max 3 digits; expiry auto-inserts <code>/</code></li>
+            <li><code>isFormValid</code> computed via <code>useMemo</code> — enables/disables submit button</li>
+            <li>Field-level error display on blur via <code>touched</code> state tracking</li>
+            <li>On success: animated checkmark → redirects to <code>/bookings</code> after 2s</li>
+            <li>Retry logic: on 500 error, refreshes booking data and retries once</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Is the credit card data sent to your backend?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">No — only the <code>bookingId</code> and <code>method</code> are sent to the backend. The card form is a UI simulation for the university project. In production, you'd integrate with a payment gateway (Stripe, PayPal SDK) that tokenizes card data client-side, never exposing raw card numbers to your server.</div></div></div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why validate expiry date against the current date?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">An expired card will always be declined. Catching this client-side saves a round-trip to the server and provides immediate feedback. The comparison uses <code>new Date(2000 + yy, mm) > new Date()</code> — month is 1-indexed in the input but the Date constructor treats it as 0-indexed.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-ExtensionModal.jsx">
+        <div class="file-header" onclick="toggleCard('ExtensionModal.jsx')"><span>📄</span><span class="file-name"><span class="ext-jsx">ExtensionModal.jsx</span></span><span class="file-purpose-preview">Extend booking — new check-out date, additional payment</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Two-phase: date selection → <code>requestExtension()</code> → backend returns additional cost → payment</li>
+            <li>Min date = current check-out date; validates new date > current check-out</li>
+            <li>Calls <code>paymentAPI.createPayment({bookingId, extensionId, method})</code> to confirm</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">How is the extension price calculated?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">The backend calculates it based on the same dynamic pricing rules used for the original booking, applied to the additional nights. The frontend only displays the result — it never calculates prices locally.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-FeedbackSection.jsx">
+        <div class="file-header" onclick="toggleCard('FeedbackSection.jsx')"><span>📄</span><span class="file-name"><span class="ext-jsx">FeedbackSection.jsx</span></span><span class="file-purpose-preview">Customer reviews carousel — submit form, star ratings, avatars</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Fetches feedback via <code>feedbackAPI.getAllFeedbacks(page, size)</code> on mount</li>
+            <li>Avatar with gradient background (deterministic based on name hash)</li>
+            <li>Review submission form: rating selector + text area + submit button</li>
+            <li>Calls <code>feedbackAPI.createFeedback(data)</code> to submit new reviews</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">How are avatar colors generated deterministically?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">A hash is computed from the user's name by summing character codes with bit shifting (<code>charCodeAt(i) + ((hash &lt;&lt; 5) - hash)</code>). The hash modulo the gradient array length selects a consistent gradient. Same name always gets the same color.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-AdvertiseSection.jsx">
+        <div class="file-header" onclick="toggleCard('AdvertiseSection.jsx')"><span>📄</span><span class="file-name"><span class="ext-jsx">AdvertiseSection.jsx</span></span><span class="file-purpose-preview">Marketing hero section — static, no data fetching</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Static component — no state or API calls</li>
+            <li>Gallery layout: main image + two floating accent images (from Unsplash)</li>
+            <li>Decorative elements: gradient rings, overlay effects</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why use external Unsplash images instead of local assets?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">For a university project, Unsplash provides high-quality, royalty-free images without bloating the repository. In production, you'd host optimized images on your own CDN or S3 bucket for reliability and performance.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-Footer.jsx">
+        <div class="file-header" onclick="toggleCard('Footer.jsx')"><span>📄</span><span class="file-name"><span class="ext-jsx">Footer.jsx</span></span><span class="file-purpose-preview">Customer footer — links, socials, copyright</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Static component — no state or API calls</li>
+            <li>Multi-column grid layout: Brand, Quick Links, Destinations, Support, Legal</li>
+            <li>Social media SVG icons: Instagram, Twitter, LinkedIn, YouTube</li>
+            <li>Dynamic copyright year via <code>new Date().getFullYear()</code></li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why have a separate footer component instead of inline in the layout?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">Separation of concerns — the footer has its own complex markup and styling. Keeping it standalone makes it independently maintainable, testable, and reusable if the layout structure changes.</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ AI COMPONENTS ═══ -->
+    <div id="section-ai" class="folder-section">
+      <div class="folder-heading"><span class="folder-icon-lg">📁</span><span class="folder-title">components/ai/</span></div>
+      <div class="folder-desc">AI-powered chat assistant components connecting to a separate AI microservice (port 8082) for intelligent hotel recommendations and booking assistance.</div>
+
+      <div class="file-card" id="card-AiChatWidget.jsx">
+        <div class="file-header" onclick="toggleCard('AiChatWidget.jsx')"><span>📄</span><span class="file-name"><span class="ext-jsx">AiChatWidget.jsx</span></span><span class="file-purpose-preview">Floating AI chat — session management, typing indicator, minimize states</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>State: <code>isOpen</code>, <code>isMinimized</code>, <code>input</code>, <code>messages[]</code>, <code>isLoading</code>, <code>sessionId</code></li>
+            <li>Session ID: <code>session-${random}</code> generated once per mount to maintain conversation context</li>
+            <li>Auto-scrolls to bottom on new messages via <code>useRef</code> + <code>scrollIntoView</code></li>
+            <li>Toggle states: closed (FAB button only) → open (full chat) → minimized (header only)</li>
+            <li>Uses <code>lucide-react</code> icons and <code>framer-motion</code> for animations</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why use a separate session ID instead of the user's auth token for conversation tracking?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">The session ID tracks a single conversation thread. A user might have multiple conversations (different tabs) or the AI service might not need to know the user's identity for basic Q&A. The token is sent separately for authenticated features.</div></div></div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why is the AI service on a different port (8082)?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">It's a separate microservice. Separating it from the main booking API (8080) follows microservice architecture principles: independent scaling, deployment, and failure isolation. The AI subsystem has its own dependencies (ML models, vector databases, etc.).</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-aiService.js">
+        <div class="file-header" onclick="toggleCard('aiService.js')"><span>📄</span><span class="file-name"><span class="ext-js">aiService.js</span></span><span class="file-purpose-preview">HTTP layer for AI microservice — uses fetch() not Axios</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Base URL: <code>http://localhost:8082/api/ai</code></li>
+            <li>Single exported function: <code>sendChatMessage(message, sessionId, token)</code></li>
+            <li>Uses native <code>fetch()</code> (not Axios) — keeps AI service independent from main API layer</li>
+            <li>Sends POST to <code>/chat</code> with JSON body: <code>{ message, sessionId }</code></li>
+            <li>Attaches <code>Authorization: Bearer {token}</code> header if token is provided</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why use <code>fetch()</code> here instead of Axios like the other services?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">The AI service is architecturally separate from the main booking API. Using <code>fetch()</code> avoids coupling it to the Axios interceptor chain (which handles booking API token refresh). The AI service has simpler auth needs — if the token is invalid, the chat just shows an error rather than attempting refresh.</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ MANAGER COMPONENTS ═══ -->
+    <div id="section-manager" class="folder-section">
+      <div class="folder-heading"><span class="folder-icon-lg">📁</span><span class="folder-title">components/manager_2/</span></div>
+      <div class="folder-desc">Hotel manager portal components. Provides full CRUD operations for hotels, rooms, room types, bookings, base prices, and dynamic pricing rules.</div>
+
+      <div class="file-card" id="card-ManagerHotels.js">
+        <div class="file-header" onclick="toggleCard('ManagerHotels.js')"><span>📄</span><span class="file-name"><span class="ext-js">ManagerHotels.js</span></span><span class="file-purpose-preview">Hotel CRUD — create, edit, delete, image preview</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Fetches hotels via <code>managerAPI.getMyHotels()</code> on mount</li>
+            <li>Create: modal form → <code>managerAPI.createHotel(formData)</code> with <code>multipart/form-data</code></li>
+            <li>Edit: pre-fills form → <code>managerAPI.updateHotel(hotelId, formData)</code></li>
+            <li>Image preview: <code>FileReader</code> reads file as data URL for instant preview before upload</li>
+            <li>Each hotel card has "Manage" button → navigates to ManagerDashboard</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">How does image preview work before upload?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">When the user selects a file, a <code>FileReader</code> reads it as a data URL (<code>readAsDataURL</code>). This base64-encoded string is set as the <code>src</code> of an <code>&lt;img&gt;</code> tag, showing the preview instantly without any server round-trip.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-ManagerDashboard.jsx">
+        <div class="file-header" onclick="toggleCard('ManagerDashboard.jsx')"><span>📄</span><span class="file-name"><span class="ext-jsx">ManagerDashboard.jsx</span></span><span class="file-purpose-preview">Tabbed dashboard — rooms, room types, bookings, pricing</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Extracts <code>hotelId</code> from URL params</li>
+            <li>Fetches ALL data in parallel using <code>Promise.all()</code> — 6 concurrent API calls</li>
+            <li>Each fetch has <code>.catch(() => ({ data: [] }))</code> — one failed fetch doesn't break the entire page</li>
+            <li>Tab navigation: Rooms, Room Types, Bookings, Pricing Rules, Base Prices</li>
+            <li><code>onRefresh</code> callback passed to child tabs — allows child to trigger data re-fetch after mutations</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why fetch all data upfront instead of lazily per tab?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">Hotel management data is relatively small. Fetching everything upfront eliminates loading delays when switching tabs, providing a snappier UX. The parallel fetch with <code>Promise.all</code> keeps the initial load fast.</div></div></div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">What's the <code>onRefresh</code> pattern?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">Each tab receives an <code>onRefresh</code> callback that re-fetches all dashboard data. When a tab creates/updates/deletes an entity, it calls <code>onRefresh()</code> to ensure all tabs have consistent data (e.g., creating a room type affects both the Room Types tab and the Rooms tab's dropdown).</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-ManagerRoomsTab.js">
+        <div class="file-header" onclick="toggleCard('ManagerRoomsTab.js')"><span>📄</span><span class="file-name"><span class="ext-js">ManagerRoomsTab.js</span></span><span class="file-purpose-preview">Physical room CRUD — number, room type, status</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Room statuses: AVAILABLE, MAINTENANCE, DEACTIVATED — color-coded badges</li>
+            <li>Create/Edit modal: room number, room type dropdown, status dropdown</li>
+            <li>Change room type: separate modal for reassigning a room to a different type</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">What's the relationship between rooms and room types?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">A room type defines the category (Deluxe, Suite) with amenities and base price. A room is a physical instance — "Room 301" of type "Deluxe". Multiple rooms share one room type. When a customer books a "Deluxe" room, the system assigns an available room of that type.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-ManagerRoomTypesTab.js">
+        <div class="file-header" onclick="toggleCard('ManagerRoomTypesTab.js')"><span>📄</span><span class="file-name"><span class="ext-js">ManagerRoomTypesTab.js</span></span><span class="file-purpose-preview">Room type CRUD — amenities, capacity, image upload</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Fetches available amenities from <code>amenitiesAPI.getAllAmenities()</code> with fallback to <code>FALLBACK_AMENITIES</code></li>
+            <li><code>formatAmenityDisplay()</code>: converts <code>WIFI</code> → <code>Wifi</code>, <code>AIR_CONDITIONING</code> → <code>Air Conditioning</code></li>
+            <li>Create: multipart form with name, capacity (SINGLE/DOUBLE/TWIN/TRIPLE/FAMILY), base price, amenities checkboxes, image upload</li>
+            <li>Delete: confirmation with cascade warning</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why fetch amenities from the backend instead of hardcoding them?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">The amenities are defined as a Java enum on the backend. Fetching them ensures the frontend stays in sync if new amenities are added. The <code>FALLBACK_AMENITIES</code> constant is a safety net in case the API call fails — the UI remains functional with a known set.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-ManagerBookingsTab.js">
+        <div class="file-header" onclick="toggleCard('ManagerBookingsTab.js')"><span>📄</span><span class="file-name"><span class="ext-js">ManagerBookingsTab.js</span></span><span class="file-purpose-preview">Read-only booking overview — status filters, revenue calculation</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Status filters: ALL, CONFIRMED, PENDING, CANCELLED, COMPLETED, REFUNDED with count badges</li>
+            <li>Search: filters by customer name, email, room number, room type, or booking ID</li>
+            <li>Revenue: sums <code>totalPrice</code> or <code>quotedPrice</code> of CONFIRMED + COMPLETED bookings</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why is this tab read-only for managers?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">Booking state transitions are driven by business rules: payment confirms, customer cancels, system completes after checkout. Allowing manual manager overrides could create inconsistencies with payment records. The manager's role is to observe and manage capacity, not manipulate individual bookings.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-ManagerBasePricesTab.js">
+        <div class="file-header" onclick="toggleCard('ManagerBasePricesTab.js')"><span>📄</span><span class="file-name"><span class="ext-js">ManagerBasePricesTab.js</span></span><span class="file-purpose-preview">Seasonal base pricing per room type and date range</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Form fields: room type (dropdown), price per night, start date, end date, season name, active toggle</li>
+            <li>CRUD via: <code>managerAPI.setBasePrice()</code>, <code>patchBasePrice()</code>, <code>deleteBasePrice()</code></li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">How do base prices interact with pricing rules?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">The pricing engine first looks up the applicable base price for the room type and date range. Then it applies all active pricing rules as percentage adjustments. Final quoted price: <code>basePrice × (1 + sum of adjustments)</code>.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-ManagerPricingRulesTab.js">
+        <div class="file-header" onclick="toggleCard('ManagerPricingRulesTab.js')"><span>📄</span><span class="file-name"><span class="ext-js">ManagerPricingRulesTab.js</span></span><span class="file-purpose-preview">Dynamic pricing rules — EARLY_BIRD, SEASONAL, WEEKEND, LAST_MINUTE...</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Rule types: EARLY_BIRD, LAST_MINUTE, LONG_STAY, WEEKEND, SEASONAL, HOLIDAY, OCCUPANCY_BASED, LENGTH_OF_STAY</li>
+            <li>Fields: name, adjustment % (+/-), rule type, min/max days before check-in, min stay days, valid date range, applicable days (Mon-Sun checkboxes), priority, active toggle</li>
+            <li>Assign modal: links a rule to specific room types via <code>assignRuleToRoomTypes(ruleId, roomTypeIds[])</code></li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">How does rule priority work?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">When multiple rules apply to the same booking, priority determines the order of application. Lower priority numbers are applied first. This matters because percentage adjustments compound — a -10% early-bird followed by +5% weekend gives a different result than the reverse.</div></div></div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">What's the difference between EARLY_BIRD and LAST_MINUTE?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">EARLY_BIRD applies when booking is made many days before check-in (<code>minDaysBeforeCheckin</code> is high) — typically a discount to encourage advance booking. LAST_MINUTE applies when booking is close to check-in (<code>maxDaysBeforeCheckin</code> is low) — can be a discount to fill empty rooms or surcharge for urgency.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-ManagerNavbar.js">
+        <div class="file-header" onclick="toggleCard('ManagerNavbar.js')"><span>📄</span><span class="file-name"><span class="ext-js">ManagerNavbar.js</span></span><span class="file-purpose-preview">Manager navigation — dark/light theme toggle, logout</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>State: <code>isDark</code> (persisted to localStorage)</li>
+            <li>Theme toggle: sets <code>data-theme</code> attribute on <code>document.documentElement</code>, enabling CSS variable switching</li>
+            <li>Uses <code>useAuth()</code> for user info and logout</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">How does the theme toggle work without a state management library?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">Setting <code>data-theme="dark"</code> on the root element activates a different set of CSS variables. All manager components reference these variables, so changing the attribute instantly re-themes everything. localStorage persists the preference across sessions.</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-card" id="card-ManagerFooter.js">
+        <div class="file-header" onclick="toggleCard('ManagerFooter.js')"><span>📄</span><span class="file-name"><span class="ext-js">ManagerFooter.js</span></span><span class="file-purpose-preview">Manager footer — brand info, quick links, social icons</span><span class="expand-icon">▶</span></div>
+        <div class="file-body">
+          <div class="section-block"><div class="section-label">Internal Details</div><ul class="detail-list">
+            <li>Static component — no state or API calls</li>
+            <li>Multi-column layout: Brand, Quick Links, Resources, Legal</li>
+            <li>Dynamic copyright year; social media SVG icons</li>
+          </ul></div>
+          <div class="section-block"><div class="section-label">Discussion Q&A</div>
+            <div class="qa-block"><div class="qa-question" onclick="toggleQA(this)"><span class="qa-q-icon">Q</span><span class="qa-q-text">Why have separate footers for customer and manager portals?</span><span class="qa-toggle">▶</span></div><div class="qa-answer"><div class="qa-a-icon">✅ Answer</div><div class="qa-a-text">The portals serve different audiences with different needs. The customer footer has destination links, support info, and newsletter signup. The manager footer has documentation links, API references, and admin resources. Separate components allow independent evolution.</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ KEY CONCEPTS ═══ -->
+    <div id="section-concepts" class="concepts-section">
+      <div class="folder-heading" style="margin-bottom:24px">
+        <span class="folder-icon-lg">🧠</span>
+        <span class="folder-title">Key Technical Concepts</span>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-header">⚛️ React Component Lifecycle</div>
+        <div class="concept-body">
+          <p style="margin-bottom:12px">The application uses <strong style="color:var(--blue)">functional components exclusively</strong> with React Hooks for lifecycle management:</p>
+          <table class="concept-table">
+            <thead><tr><th>Hook</th><th>Usage in this project</th></tr></thead>
+            <tbody>
+              <tr><td>useState</td><td>Local component state (forms, loading flags, modal visibility)</td></tr>
+              <tr><td>useEffect</td><td>Side effects (API calls on mount, event listeners, cleanup)</td></tr>
+              <tr><td>useRef</td><td>DOM references (auto-scroll in chat, input focus)</td></tr>
+              <tr><td>useMemo</td><td>Memoized computations (form validation in PaymentModal)</td></tr>
+              <tr><td>useCallback</td><td>Stable function references (modal close handlers)</td></tr>
+              <tr><td>useContext</td><td>Consuming AuthContext without prop drilling</td></tr>
+            </tbody>
+          </table>
+          <p style="margin-top:12px;font-size:12px;color:var(--text3)">No class components are used. The <code>useEffect</code> cleanup pattern is consistently applied for event listeners and scroll locks.</p>
+        </div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-header">🗄️ State Management Strategy</div>
+        <div class="concept-body">
+          <p style="margin-bottom:12px">The project uses a <strong style="color:var(--blue)">lightweight, context-based approach</strong> rather than Redux or Zustand:</p>
+          <table class="concept-table">
+            <thead><tr><th>Layer</th><th>Tool</th><th>Scope</th></tr></thead>
+            <tbody>
+              <tr><td>Global auth state</td><td>React Context (AuthContext)</td><td>Entire app</td></tr>
+              <tr><td>Page-level data</td><td>useState in page components</td><td>Single page</td></tr>
+              <tr><td>Cross-page persistence</td><td>localStorage</td><td>Search params, tokens, theme</td></tr>
+              <tr><td>Component-local UI</td><td>useState in components</td><td>Single component</td></tr>
+            </tbody>
+          </table>
+          <p style="margin-top:12px;font-size:12px;color:var(--text3)"><strong style="color:var(--gold2)">Why no Redux?</strong> The app has a single global concern (authentication). All other state is page-scoped — hotels on the Home page don't need to be shared with the Bookings page. This keeps the architecture simple and avoids boilerplate.</p>
+        </div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-header">🔀 Routing & Navigation</div>
+        <div class="concept-body">
+          <p style="margin-bottom:12px">Built with <strong style="color:var(--blue)">React Router v6</strong>:</p>
+          <ul class="detail-list">
+            <li><strong>Nested Routes with Outlet</strong>: CustomerLayout and ManagerLayout use <code>&lt;Outlet /&gt;</code> to render child routes within their layout wrapper</li>
+            <li><strong>Route Guards</strong>: CustomerGuard, ManagerGuard, PublicRoute — check auth state before rendering</li>
+            <li><strong>Programmatic Navigation</strong>: <code>useNavigate()</code> for post-action redirects (after login, after search)</li>
+            <li><strong>URL Parameters</strong>: <code>useParams()</code> for dynamic routes (<code>/hotel/:id</code>, <code>/manager-dashboard/:hotelId</code>)</li>
+            <li><strong>Query Parameters</strong>: <code>useLocation()</code> + <code>URLSearchParams</code> for search filters</li>
+            <li><strong>Catch-all Route</strong>: <code>&lt;Route path="*"&gt;</code> redirects unknown paths to login</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-header">🌐 API Communication</div>
+        <div class="concept-body">
+          <p style="margin-bottom:12px">All HTTP communication uses <strong style="color:var(--blue)">Axios</strong> with a consistent interceptor pattern:</p>
+          <div class="flow-box">Request Flow:
+  Component → API Service → Axios Instance → Request Interceptor (attach JWT) → Backend
+
+Response Flow:
+  Backend → Response Interceptor (check 401 → refresh token → retry) → API Service → Component</div>
+          <ul class="detail-list" style="margin-top:12px">
+            <li><strong>Three separate Axios instances</strong>: <code>api</code> (auth), <code>customerApi</code> (customer), <code>apiManager</code> (manager)</li>
+            <li><strong>Automatic token refresh</strong>: 401 responses trigger refresh flow transparently</li>
+            <li><strong>Subscriber queue</strong>: Prevents multiple simultaneous refresh calls when parallel requests fail</li>
+            <li><strong>Multipart uploads</strong>: Hotel/room-type image uploads use FormData with overridden content-type</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-header">🔐 Authentication & Authorization Flow</div>
+        <div class="concept-body">
+          <div class="flow-box">AUTH FLOW:
+  1. User submits credentials (Login/Signup)
+  2. Backend validates → returns {accessToken, refreshToken}
+  3. Tokens stored in localStorage
+  4. AuthContext fetches user profile (GET /api/users/me)
+  5. User object (with roles[]) stored in context state
+  6. Route guards read context → allow/redirect
+
+TOKEN REFRESH:
+  1. API call returns 401 (token expired)
+  2. Interceptor sends refresh token to /api/auth/refresh
+  3. Backend validates → returns new token pair
+  4. New tokens saved to localStorage
+  5. Original failed request retried with new access token
+  6. If refresh fails → clear tokens → dispatch logout event
+
+ROLES:
+  CUSTOMER    → CustomerGuard routes
+  HOTEL_MANAGER → ManagerGuard routes
+  ADMIN       → ManagerGuard routes (same access)</div>
+          <p style="margin-top:12px;font-size:12px;color:var(--gold2);background:rgba(240,180,41,0.07);padding:10px 12px;border-radius:6px;border-left:3px solid var(--gold)">⚠️ <strong>Important:</strong> Frontend guards are a UX convenience. The real security boundary is the backend — even if a user bypasses frontend guards, API calls will fail with 403 Forbidden if their JWT doesn't have the required role.</p>
+        </div>
+      </div>
+
+      <div class="concept-card">
+        <div class="concept-header">🧩 Design Patterns Used</div>
+        <div class="concept-body">
+          <table class="concept-table">
+            <thead><tr><th>Pattern</th><th>Where</th><th>Purpose</th></tr></thead>
+            <tbody>
+              <tr><td>Context Provider</td><td>AuthContext</td><td>Global state without prop drilling</td></tr>
+              <tr><td>Interceptor</td><td>API services</td><td>Cross-cutting concerns (auth headers, token refresh)</td></tr>
+              <tr><td>Subscriber/Observer</td><td>Token refresh queue</td><td>Handle concurrent 401s</td></tr>
+              <tr><td>Guard/Middleware</td><td>Route guards</td><td>Access control</td></tr>
+              <tr><td>Layout Composition</td><td>CustomerLayout, ManagerLayout</td><td>Shared UI structure</td></tr>
+              <tr><td>Container/Presenter</td><td>Pages (fetch) → Components (render)</td><td>Separation of concerns</td></tr>
+              <tr><td>Controlled Components</td><td>All form inputs</td><td>React-managed form state</td></tr>
+              <tr><td>Two-Phase Commit</td><td>Booking → Payment</td><td>Ensure price accuracy before payment</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state for search -->
+    <div id="empty-state" class="empty-state">
+      <div style="font-size:36px">🔍</div>
+      <p>No results found for your search.</p>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<button id="sidebarToggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+
+<script>
+// ─── STATE ───
+let currentSection = 'overview';
+let currentFile = null;
+let searchActive = false;
+
+// ─── FOLDER TOGGLE ───
+function toggleFolder(name) {
+  const btn = document.querySelector(`#navfolder-${name} .nav-folder-btn`);
+  const files = document.getElementById(`navfiles-${name}`);
+  btn.classList.toggle('open');
+  files.classList.toggle('open');
+}
+
+// ─── SECTION NAVIGATION ───
+const sectionMap = {
+  'overview': 'section-overview',
+  'concepts': 'section-concepts',
+  'App.js': 'section-root',
+  'index.js': 'section-root',
+  'utils-imageUrl.js': 'section-root',
+  'AuthContext.js': 'section-context',
+  'api.js': 'section-services',
+  'customerApi.js': 'section-services',
+  'apiManager.js': 'section-services',
+  'Home.jsx': 'section-pages',
+  'HotelDetail.jsx': 'section-pages',
+  'MyBookings.jsx': 'section-pages',
+  'SearchResults.jsx': 'section-pages',
+  'Login.js': 'section-pages',
+  'Signup.js': 'section-pages',
+  'AIAssistant.jsx': 'section-pages',
+  'Navbar.jsx': 'section-customer',
+  'HotelCard.jsx': 'section-customer',
+  'BookingModal.jsx': 'section-customer',
+  'PaymentModal.jsx': 'section-customer',
+  'ExtensionModal.jsx': 'section-customer',
+  'FeedbackSection.jsx': 'section-customer',
+  'AdvertiseSection.jsx': 'section-customer',
+  'Footer.jsx': 'section-customer',
+  'AiChatWidget.jsx': 'section-ai',
+  'aiService.js': 'section-ai',
+  'ManagerHotels.js': 'section-manager',
+  'ManagerDashboard.jsx': 'section-manager',
+  'ManagerRoomsTab.js': 'section-manager',
+  'ManagerRoomTypesTab.js': 'section-manager',
+  'ManagerBookingsTab.js': 'section-manager',
+  'ManagerBasePricesTab.js': 'section-manager',
+  'ManagerPricingRulesTab.js': 'section-manager',
+  'ManagerNavbar.js': 'section-manager',
+  'ManagerFooter.js': 'section-manager',
+};
+
+const breadcrumbLabels = {
+  'section-overview': 'Overview',
+  'section-concepts': 'Key Concepts',
+  'section-root': 'Root (src/)',
+  'section-context': 'context/',
+  'section-services': 'services/',
+  'section-pages': 'pages/',
+  'section-customer': 'components/customer/',
+  'section-ai': 'components/ai/',
+  'section-manager': 'components/manager_2/',
+};
+
+function showSection(name) {
+  if (searchActive) return;
+  // Hide all
+  document.querySelectorAll('.folder-section, .concepts-section').forEach(s => {
+    s.classList.remove('visible');
+  });
+  // Show target
+  const sectionId = name === 'overview' ? 'section-overview' : name === 'concepts' ? 'section-concepts' : null;
+  if (sectionId) {
+    document.getElementById(sectionId).classList.add('visible');
+    updateNavHighlight(name);
+    updateBreadcrumb(sectionId, null);
+  }
+}
+
+function showFile(fileId) {
+  if (searchActive) return;
+  const sectionId = sectionMap[fileId];
+  if (!sectionId) return;
+
+  // Hide all, show target section
+  document.querySelectorAll('.folder-section, .concepts-section').forEach(s => s.classList.remove('visible'));
+  document.getElementById(sectionId).classList.add('visible');
+
+  // Expand the file card
+  const card = document.getElementById(`card-${fileId}`);
+  if (card) {
+    card.classList.add('expanded', 'highlight');
+    setTimeout(() => card.classList.remove('highlight'), 2000);
+    setTimeout(() => {
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 50);
+  }
+
+  updateNavHighlight(fileId);
+  updateBreadcrumb(sectionId, fileId);
+}
+
+function updateNavHighlight(active) {
+  document.querySelectorAll('.nav-file-btn, .nav-special-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById(`navbtn-${active}`) || document.getElementById(`nav-${active}`);
+  if (btn) btn.classList.add('active');
+}
+
+function updateBreadcrumb(sectionId, fileId) {
+  const bc = document.getElementById('breadcrumb');
+  const folder = breadcrumbLabels[sectionId] || sectionId;
+  bc.innerHTML = `<span>elitereserve-frontend</span><span class="sep">/</span><span>src</span><span class="sep">/</span><span>${folder}</span>${fileId ? `<span class="sep">/</span><span style="color:var(--cyan)">${fileId}</span>` : ''}`;
+}
+
+// ─── FILE CARD TOGGLE ───
+function toggleCard(fileId) {
+  const card = document.getElementById(`card-${fileId}`);
+  card.classList.toggle('expanded');
+}
+
+// ─── Q&A TOGGLE ───
+function toggleQA(btn) {
+  btn.closest('.qa-block').classList.toggle('qa-open');
+}
+
+// ─── EXPAND / COLLAPSE ALL ───
+function expandAll() {
+  document.querySelectorAll('.file-card').forEach(c => c.classList.add('expanded'));
+  document.querySelectorAll('.qa-block').forEach(q => q.classList.add('qa-open'));
+}
+function collapseAll() {
+  document.querySelectorAll('.file-card').forEach(c => c.classList.remove('expanded'));
+  document.querySelectorAll('.qa-block').forEach(q => q.classList.remove('qa-open'));
+}
+
+// ─── SEARCH ───
+const searchInput = document.getElementById('searchInput');
+const searchCount = document.getElementById('searchCount');
+
+searchInput.addEventListener('input', function() {
+  const q = this.value.trim().toLowerCase();
+  if (!q) {
+    clearSearch();
+    return;
+  }
+  performSearch(q);
+});
+
+function performSearch(q) {
+  searchActive = true;
+  // Show all sections
+  document.querySelectorAll('.folder-section').forEach(s => s.classList.add('visible'));
+  document.getElementById('section-concepts').classList.remove('visible');
+
+  // Remove previous highlights
+  document.querySelectorAll('mark').forEach(m => {
+    m.outerHTML = m.textContent;
+  });
+
+  let matchCount = 0;
+  const cards = document.querySelectorAll('.file-card');
+  cards.forEach(card => {
+    const text = card.textContent.toLowerCase();
+    if (text.includes(q)) {
+      card.style.display = '';
+      card.classList.add('expanded');
+      matchCount++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  // Show/hide empty state
+  document.getElementById('empty-state').classList.toggle('visible', matchCount === 0);
+
+  searchCount.style.display = 'block';
+  searchCount.textContent = `${matchCount} file${matchCount !== 1 ? 's' : ''} matched`;
+
+  updateBreadcrumb('', null);
+  document.getElementById('breadcrumb').innerHTML = `<span>Search results for: </span><span style="color:var(--blue)">"${q}"</span>`;
+}
+
+function clearSearch() {
+  searchActive = false;
+  document.querySelectorAll('.file-card').forEach(c => { c.style.display = ''; c.classList.remove('expanded'); });
+  document.getElementById('empty-state').classList.remove('visible');
+  searchCount.style.display = 'none';
+
+  // Restore to overview
+  document.querySelectorAll('.folder-section, .concepts-section').forEach(s => s.classList.remove('visible'));
+  document.getElementById('section-overview').classList.add('visible');
+  updateBreadcrumb('section-overview', null);
+}
+
+// ─── KEYBOARD SHORTCUT ───
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    searchInput.focus();
+    searchInput.select();
+  }
+  if (e.key === 'Escape' && document.activeElement === searchInput) {
+    searchInput.value = '';
+    clearSearch();
+    searchInput.blur();
+  }
+});
+
+// ─── INIT ───
+showSection('overview');
+</script>
+</body>
+</html>

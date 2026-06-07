@@ -1,0 +1,233 @@
+/* 
+ * User Management Page Redesign
+ * Aesthetic: Digital Architect (Premium enterprise)
+ */
+
+.toolbar-premium {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.search-input {
+  padding: 10px 14px 10px 38px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--roundness-md);
+  font-size: 0.875rem;
+  background-color: white;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  min-width: 320px;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(0, 88, 190, 0.1);
+}
+
+.role-filter-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.role-select {
+  padding: 10px 36px 10px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--roundness-md);
+  font-size: 0.875rem;
+  background-color: white;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  outline: none;
+  color: var(--color-on-surface-variant);
+  min-width: 180px;
+}
+
+.role-select:focus {
+  border-color: var(--color-primary);
+}
+
+.select-icon {
+  position: absolute;
+  right: 12px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.create-btn-premium {
+  padding: 10px 20px;
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--roundness-md);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.create-btn-premium:hover {
+  background-color: var(--color-primary-container);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* User Identity Cells */
+.user-profile-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.user-name-bold {
+  font-weight: 600;
+  color: var(--color-on-surface);
+}
+
+.email-link {
+  color: var(--color-on-surface-variant);
+  font-size: 0.8125rem;
+}
+
+.user-id-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background-color: #eff6ff;
+  color: #2563eb;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* Role Badges */
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--roundness-full);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.role-badge--admin { 
+  background-color: #ede9fe; 
+  color: #6d28d9; 
+  border-color: rgba(109, 40, 217, 0.1);
+}
+.role-badge--hotel_manager { 
+  background-color: #fef3c7; 
+  color: #b45309; 
+  border-color: rgba(180, 83, 9, 0.1);
+}
+.role-badge--customer { 
+  background-color: #d1fae5; 
+  color: #065f46; 
+  border-color: rgba(6, 95, 70, 0.1);
+}
+
+/* Action Buttons */
+.action-buttons-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn--edit:hover {
+  background-color: #eff6ff;
+  color: var(--color-primary);
+}
+
+.action-btn--delete:hover {
+  background-color: #fee2e2;
+  color: #ef4444;
+}
+
+/* Table Enhancements (Scoped via Users-Table-Wrapper) */
+.users-table-wrapper .custom-table thead th {
+  padding: 14px 16px;
+  background-color: #f8fafc;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.users-table-wrapper .custom-table tbody td {
+  padding: 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.users-table-wrapper .custom-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.users-table-wrapper .custom-table tbody tr:hover {
+  background-color: #f8fafc !important;
+}
+
+@media (max-width: 1024px) {
+  .toolbar-premium {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-input {
+    min-width: 100%;
+  }
+}
