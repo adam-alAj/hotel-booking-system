@@ -1,0 +1,401 @@
+.c-extension-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 20, 40, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1rem;
+}
+
+.c-extension-modal {
+  background: white;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.c-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #f1f5f9;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.c-close-btn:hover {
+  background: #e2e8f0;
+  transform: rotate(90deg);
+}
+
+.c-modal-header {
+  padding: 1.5rem 1.5rem 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.c-modal-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.5rem;
+}
+
+.c-modal-header p {
+  color: #64748b;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.c-modal-body {
+  padding: 1.5rem;
+}
+
+.c-current-booking {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.c-info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+
+.c-info-row:first-child {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.c-info-row span {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.c-info-row strong {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.c-extension-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.c-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.c-form-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.c-form-group input {
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.c-form-group input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.c-price-breakdown {
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+.c-price-breakdown h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 0.75rem;
+}
+
+.c-price-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  font-size: 0.875rem;
+}
+
+.c-price-row .c-price {
+  color: #3b82f6;
+  font-weight: 700;
+}
+
+.c-price-row.c-total {
+  border-top: 1px solid #cbd5e1;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.c-submit-btn, .c-pay-btn {
+  width: 100%;
+  padding: 1rem;
+  background: #0f172a;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 0.5rem;
+}
+
+.c-submit-btn:hover, .c-pay-btn:hover {
+  background: #1e293b;
+  transform: translateY(-2px);
+}
+
+.c-submit-btn:disabled, .c-pay-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.c-extension-summary {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.c-summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+
+.c-summary-row .c-price {
+  color: #3b82f6;
+  font-size: 1.125rem;
+}
+
+.c-payment-methods {
+  margin: 1.5rem 0;
+}
+
+.c-payment-methods h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 0.75rem;
+}
+
+.c-method-options {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.c-method-btn {
+  flex: 1;
+  padding: 0.75rem;
+  background: #f1f5f9;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.c-method-btn.c-active {
+  border-color: #3b82f6;
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.c-method-btn:hover {
+  background: #e2e8f0;
+}
+
+.c-error-message {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 0.75rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  margin: 1rem 0;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .c-extension-modal {
+    max-width: 95%;
+  }
+  
+  .c-method-options {
+    flex-direction: column;
+  }
+}
+
+/* Payment Form Styles */
+.c-payment-form {
+  margin-top: 1.5rem;
+}
+
+.c-form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.c-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.c-form-group label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.c-form-group input {
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.c-form-group input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.c-payment-methods {
+  margin: 1rem 0;
+}
+
+.c-payment-methods h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 0.75rem;
+}
+
+.c-method-options {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.c-method-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: #f1f5f9;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.c-method-btn .c-method-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.c-method-btn.c-active {
+  border-color: #3b82f6;
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.c-method-btn:hover {
+  background: #e2e8f0;
+}
+
+.c-pay-btn {
+  width: 100%;
+  padding: 1rem;
+  background: #0f172a;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 1rem;
+}
+
+.c-pay-btn:hover {
+  background: #1e293b;
+  transform: translateY(-2px);
+}
+
+.c-pay-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.c-secure-text {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 1rem;
+}
+
+.c-error-message {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 0.75rem;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  margin: 1rem 0;
+}

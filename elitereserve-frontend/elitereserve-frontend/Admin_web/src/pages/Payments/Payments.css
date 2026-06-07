@@ -1,0 +1,821 @@
+/* ========================================
+   FINANCE & SETTLEMENT - DARK LUXURY THEME
+   Bloomberg Terminal meets Modern Fintech
+   ======================================== */
+
+/* Font Imports */
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+/* ========================================
+   CSS CUSTOM PROPERTIES (Luxury Dark Palette)
+   ======================================== */
+
+:root {
+  /* Backgrounds */
+  --bg-base: #0a0c10;
+  --bg-surface: #12151c;
+  --bg-elevated: #1a1e28;
+  --bg-hover: #20242e;
+
+  /* Accent Colors */
+  --accent-gold: #c9a84c;
+  --accent-gold-light: #d9b85c;
+  --accent-gold-dark: #a98a3a;
+  --accent-green: #2ecc8f;
+  --accent-red: #e05252;
+
+  /* Text */
+  --text-primary: #f0ede6;
+  --text-muted: #6b7280;
+  --text-dimmed: #4b5563;
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.06);
+  --border-accent: rgba(201, 168, 76, 0.2);
+
+  /* Typography */
+  --font-serif: 'DM Serif Display', serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  /* Spacing & Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+}
+
+/* ========================================
+   GLOBAL STYLES
+   ======================================== */
+
+.payments-container {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+}
+
+/* ========================================
+   ANIMATIONS & KEYFRAMES
+   ======================================== */
+
+@keyframes fadeInStaggered {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGold {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes shimmerGold {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes glowGold {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px rgba(201, 168, 76, 0);
+  }
+}
+
+/* ========================================
+   FINANCE HEADER - KPI HERO SECTION
+   ======================================== */
+
+.finance-header-editorial {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  padding: 2.5rem;
+  background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-surface) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.finance-header-editorial::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255, 255, 255, 0.002) 2px, rgba(255, 255, 255, 0.002) 4px);
+  pointer-events: none;
+}
+
+.revenue-summary-stack {
+  display: flex;
+  gap: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.revenue-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  background: rgba(201, 168, 76, 0.04);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(10px);
+  animation: fadeInStaggered 0.6s ease-out;
+}
+
+.rev-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.rev-value {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: var(--accent-gold);
+  line-height: 1;
+  margin: 0;
+}
+
+.rev-data {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.rev-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid var(--border-accent);
+  color: var(--accent-gold);
+  animation: glowGold 2s ease-in-out infinite;
+}
+
+.rev-icon.income {
+  animation: none;
+}
+
+.finance-actions {
+  position: relative;
+  z-index: 1;
+}
+
+/* ========================================
+   ACTION BUTTONS & CONTROLS
+   ======================================== */
+
+.secondary-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--bg-surface);
+  color: var(--accent-gold);
+  border: 2px solid var(--accent-gold);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.secondary-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.3), transparent);
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.secondary-btn:hover::before {
+  animation: shimmerGold 0.6s ease-in-out forwards;
+}
+
+.secondary-btn:hover {
+  background: rgba(201, 168, 76, 0.1);
+  box-shadow: 0 0 15px rgba(201, 168, 76, 0.2);
+}
+
+.secondary-btn:active {
+  transform: scale(0.98);
+}
+
+/* ========================================
+   SEARCH & FILTER BAR
+   ======================================== */
+
+.page-actions-bar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  align-items: center;
+  position: relative;
+  z-index: 200;
+}
+
+.search-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 12px rgba(201, 168, 76, 0.15);
+  color: var(--accent-gold);
+}
+
+.search-box input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.search-box input::placeholder {
+  color: var(--text-muted);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* ========================================
+   TABLE CONTAINER & HEADER
+   ======================================== */
+
+.table-container-elevated {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  animation: fadeInStaggered 0.6s ease-out 0.1s both;
+}
+
+.table-header-row {
+  background: var(--bg-elevated);
+  border-bottom: 2px solid var(--border-accent);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.table-header-cell {
+  padding: 1.25rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-right: 1px solid var(--border);
+}
+
+.table-header-cell:last-child {
+  border-right: none;
+}
+
+/* ========================================
+   TABLE ROWS & CELLS
+   ======================================== */
+
+.table-body-row {
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s ease;
+  position: relative;
+  animation: fadeInStaggered 0.4s ease-out;
+}
+
+.table-body-row:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.table-body-row:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.table-body-row:nth-child(3) {
+  animation-delay: 0.15s;
+}
+
+.table-body-row:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+.table-body-row:nth-child(5) {
+  animation-delay: 0.25s;
+}
+
+.table-body-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.table-body-row:hover::before {
+  background-color: var(--accent-gold);
+}
+
+.table-body-row:hover {
+  background: var(--bg-elevated);
+  box-shadow: inset 0 0 20px rgba(201, 168, 76, 0.05);
+}
+
+.table-cell {
+  padding: 1rem 1.5rem;
+  border-right: 1px solid var(--border);
+  vertical-align: middle;
+  color: var(--text-primary);
+}
+
+.table-cell:last-child {
+  border-right: none;
+}
+
+/* ========================================
+   TRANSACTION ID BADGE
+   ======================================== */
+
+.id-badge {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--accent-gold);
+  font-size: 0.8125rem;
+  padding: 0.4rem 0.75rem;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-sm);
+}
+
+/* ========================================
+   REFERENCE ID
+   ======================================== */
+
+.ref-id {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+/* ========================================
+   PAYMENT AMOUNT
+   ======================================== */
+
+.payment-amount {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--accent-gold);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.payment-amount::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 1.2em;
+  background: var(--accent-gold);
+  border-radius: 1px;
+  opacity: 0.5;
+}
+
+/* ========================================
+   PAYMENT METHOD
+   ======================================== */
+
+.payment-method {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.payment-method svg {
+  color: var(--accent-gold);
+}
+
+/* ========================================
+   STATUS PILLS
+   ======================================== */
+
+.status-pill {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.pill-completed,
+.pill-success {
+  background: rgba(46, 204, 143, 0.15);
+  color: var(--accent-green);
+  border: 1px solid rgba(46, 204, 143, 0.3);
+}
+
+.pill-pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.pill-failed,
+.pill-error {
+  background: rgba(224, 82, 82, 0.15);
+  color: var(--accent-red);
+  border: 1px solid rgba(224, 82, 82, 0.3);
+}
+
+.pill-processing {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.pill-processing::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #60a5fa;
+  border-radius: 50%;
+  animation: pulseGold 1.5s ease-in-out infinite;
+}
+
+/* ========================================
+   ROW ACTIONS
+   ======================================== */
+
+.row-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  background: transparent;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+.icon-btn.delete:hover {
+  background: rgba(224, 82, 82, 0.1);
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+}
+
+/* ========================================
+   ERROR STATE
+   ======================================== */
+
+.error-state-inline {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(224, 82, 82, 0.1);
+  border: 1px solid rgba(224, 82, 82, 0.3);
+  border-radius: var(--radius-lg);
+  color: #f87171;
+  font-size: 0.875rem;
+  margin-bottom: 2rem;
+  animation: fadeInStaggered 0.6s ease-out;
+}
+
+.error-state-inline button {
+  margin-left: auto;
+  padding: 0.5rem 1rem;
+  background: rgba(224, 82, 82, 0.2);
+  border: 1px solid rgba(224, 82, 82, 0.4);
+  color: #f87171;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  transition: all 0.2s ease;
+}
+
+.error-state-inline button:hover {
+  background: rgba(224, 82, 82, 0.3);
+  border-color: var(--accent-red);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 1024px) {
+  .finance-header-editorial {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .revenue-summary-stack {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .page-actions-bar {
+    flex-direction: column;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .table-cell,
+  .table-header-cell {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .finance-header-editorial {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .revenue-card {
+    padding: 1rem;
+  }
+
+  .rev-value {
+    font-size: 1.75rem;
+  }
+
+  .table-cell,
+  .table-header-cell {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.65rem;
+  }
+
+  .secondary-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+}
+
+.table-body-row:nth-child(4) {
+  animation-delay: 0.2s;
+}
+
+.table-body-row:nth-child(5) {
+  animation-delay: 0.25s;
+}
+
+.table-body-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: transparent;
+  transition: background-color 0.3s ease;
+}
+
+.table-body-row:hover::before {
+  background-color: var(--accent-gold);
+}
+
+.table-body-row:hover {
+  background: var(--bg-elevated);
+  box-shadow: inset 0 0 20px rgba(201, 168, 76, 0.05);
+}
+
+.table-cell {
+  padding: 1rem 1.5rem;
+  border-right: 1px solid var(--border);
+  vertical-align: middle;
+  color: var(--text-primary);
+}
+
+.table-cell:last-child {
+  border-right: none;
+}
+
+/* ========================================
+   TRANSACTION ID BADGE
+   ======================================== */
+
+.id-badge {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--accent-gold);
+  font-size: 0.8125rem;
+  padding: 0.4rem 0.75rem;
+  background: rgba(201, 168, 76, 0.08);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-sm);
+}
+
+/* ========================================
+   REFERENCE ID
+   ======================================== */
+
+.ref-id {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+/* ========================================
+   PAYMENT AMOUNT
+   ======================================== */
+
+.payment-amount {
+  font-weight: 700;
+  color: var(--color-on-surface);
+}
+
+.payment-method {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: var(--color-on-surface-variant);
+}
+
+.payment-date {
+  font-size: 0.8125rem;
+  color: var(--color-on-surface-variant);
+}
+
+.ref-id {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* ========================================
+   FILTER STATUS DROPDOWN
+   ======================================== */
+
+.filter-btn-wrapper {
+  position: relative;
+}
+
+.filter-chevron {
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.filter-chevron-open {
+  transform: rotate(180deg);
+}
+
+.secondary-btn.filter-active {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  background: rgba(201, 168, 76, 0.08);
+}
+
+.filter-status-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  z-index: 9999;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  min-width: 11rem;
+  animation: fadeInStaggered 0.15s ease-out;
+}
+
+.filter-status-option {
+  display: block;
+  width: 100%;
+  padding: 0.625rem 1.25rem;
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.filter-status-option:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.filter-status-option-active {
+  background: rgba(201, 168, 76, 0.15);
+  color: var(--accent-gold);
+  border-left: 3px solid var(--accent-gold);
+}
+
+.filter-status-option-active:hover {
+  background: rgba(201, 168, 76, 0.2);
+}
+
+/* ========================================
+   REPORT BUTTON WRAPPER
+   ======================================== */
+
+.report-btn-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+}
+
+.report-error-msg {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--accent-red);
+  letter-spacing: 0.02em;
+}
+
+/* ========================================
+   SEARCH EMPTY STATE
+   ======================================== */
+
+.table-search-empty {
+  padding: 4rem 2rem;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}

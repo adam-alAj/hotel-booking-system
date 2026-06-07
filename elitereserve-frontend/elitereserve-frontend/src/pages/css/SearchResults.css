@@ -1,0 +1,165 @@
+.csearch-results-page {
+  min-height: 100vh;
+  background: #f5f7fa;
+}
+
+.csearch-header-section {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  padding: 3rem 2rem;
+  color: white;
+}
+
+.csearch-header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.csearch-header-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.cactive-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.cfilters-label {
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.cfilter-tag {
+  background: rgba(255,255,255,0.2);
+  font-weight: 600;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.85rem;
+}
+
+.cclear-filters-btn {
+  background: #e0ddde;
+  border: none;
+  color: rgb(78, 75, 75);
+  font-weight: 700;
+  padding: 0.3rem 1rem;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-left: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+.cclear-filters-btn:hover {
+  background: #c73e54;
+}
+
+.cresults-count {
+  opacity: 0.9;
+  font-size: 1.1rem;
+}
+
+.csearch-results-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.chotels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.cloading, .cerror, .cno-results {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.cerror {
+  color: #e94560;
+}
+
+.cno-results-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.cno-results h3 {
+  color: #1a1a2e;
+  margin-bottom: 0.5rem;
+}
+
+.cno-results p {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.creset-search-btn {
+  background: #e94560;
+  color: white;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.creset-search-btn:hover {
+  background: #c73e54;
+}
+
+.cpagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.cpage-btn {
+  padding: 0.5rem 1.5rem;
+  border: 2px solid #e94560;
+  background: white;
+  color: #e94560;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.cpage-btn:hover:not(:disabled) {
+  background: #e94560;
+  color: white;
+}
+
+.cpage-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cpage-info {
+  color: #666;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .csearch-header-section {
+    padding: 2rem 1rem;
+  }
+
+  .csearch-header-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .csearch-results-content {
+    padding: 1rem;
+  }
+
+  .chotels-grid {
+    grid-template-columns: 1fr;
+  }
+}

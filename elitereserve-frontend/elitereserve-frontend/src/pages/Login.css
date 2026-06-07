@@ -1,0 +1,463 @@
+/* Login.css - Updated with centered feature cards (hero text preserved) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+  background: #f5f7fa;
+}
+
+/* Left Side - Hero Image */
+.auth-hero {
+  flex: 1;
+  position: relative;
+  background: linear-gradient(135deg, rgba(10, 20, 40, 0.85), rgba(5, 15, 30, 0.9)),
+  url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem;
+  position: relative;
+  overflow-y: auto;
+  height: 100vh;
+}
+
+.auth-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(0, 30, 60, 0.4) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-logo {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-logo .logooo {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -1px;
+  text-decoration: none;
+}
+
+.hero-logo .logooo span.logo-el {
+  color: #ffffff !important;
+  font-weight: 800;
+  text-shadow: 0 1px 0.1px rgba(134, 134, 217, 0.5);
+}
+
+.hero-logo .logooo span.logo-res {
+  color: rgba(193, 190, 190, 0.85) !important;
+  font-weight: 200;
+}
+
+/* Hero content - preserved original positioning and styling */
+.hero-content {
+  color: white;
+  max-width: 80%;
+  margin-bottom: 4rem;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-content h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.hero-content p {
+  font-size: 1rem;
+  line-height: 1.6;
+  opacity: 0.9;
+  margin-bottom: 2rem;
+}
+
+/* Feature cards - now centered below text */
+.hero-features {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.feature .feature-icon svg {
+  stroke: white;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.feature .feature-text {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  font-weight: 500;
+  color: white;
+}
+
+/* Right Side - Form Container */
+.auth-form-container {
+  width: 45%;
+  max-width: 520px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 2rem 2.5rem;
+  overflow-y: auto;
+  height: 100vh;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
+}
+
+.auth-form-wrapper {
+  width: 100%;
+  padding-top: 1rem;
+}
+
+/* Custom scrollbar */
+.auth-form-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.auth-form-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.auth-form-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.auth-form-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.auth-form-wrapper h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #0a1428;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+}
+
+.auth-form-wrapper p {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.auth-form-wrapper p a {
+  color: #1e3a8a;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.auth-form-wrapper p a:hover {
+  color: #0f2b5e;
+}
+
+.error-message {
+  background: #fee2e2;
+  border-left: 3px solid #dc2626;
+  color: #991b1b;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* FIXED: Form row now stacks vertically for signup page */
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  width: 100%;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #0a1428;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input {
+  padding: 0.9rem 1rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background: #f9fafb;
+  color: #0a1428;
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #1e3a8a;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+}
+
+.form-group input::placeholder {
+  color: #adb5bd;
+  font-size: 0.85rem;
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #1e3a8a;
+}
+
+.remember-me span {
+  font-size: 0.85rem;
+  color: #6c757d;
+  cursor: pointer;
+}
+
+.forgot-password {
+  font-size: 0.85rem;
+  color: #1e3a8a;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.forgot-password:hover {
+  color: #0f2b5e;
+}
+
+.auth-button {
+  background: #0a1428;
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: left 0.5s;
+}
+
+.auth-button:hover:not(:disabled) {
+  background: #1e2a3a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(10, 20, 40, 0.2);
+}
+
+.auth-button:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.auth-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Password strength */
+.password-strength {
+  margin-top: 0.3rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.strength-bar {
+  flex: 1;
+  height: 3px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  transition: width 0.3s, background 0.3s;
+  border-radius: 2px;
+}
+
+.strength-text {
+  font-size: 0.7rem;
+  font-weight: 500;
+  min-width: 45px;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-right: 0.5rem;
+}
+
+/* Footer */
+.auth-footer {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.footer-logo {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.footer-logo .logo-elite {
+  font-weight: 700;
+  color: #0a1428;
+}
+
+.footer-logo .logo-reserve {
+  font-weight: 300;
+  color: #6c757d;
+}
+
+.footer-text {
+  font-size: 0.8rem;
+  color: #6c757d;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.footer-linkssss {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.footer-linkssss a {
+  color: #6c757d;
+  text-decoration: none;
+  font-size: 0.75rem;
+  transition: color 0.3s;
+}
+
+.footer-linkssss a:hover {
+  color: #1e3a8a;
+}
+
+.copyright {
+  font-size: 0.7rem;
+  color: #adb5bd;
+  text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .auth-hero {
+    display: none;
+  }
+
+  .auth-form-container {
+    width: 100%;
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+
+  .auth-form-wrapper {
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .auth-form-container {
+    padding: 1rem;
+  }
+
+  .auth-form-wrapper h2 {
+    font-size: 1.5rem;
+  }
+
+  .footer-linkssss {
+    gap: 1rem;
+  }
+}

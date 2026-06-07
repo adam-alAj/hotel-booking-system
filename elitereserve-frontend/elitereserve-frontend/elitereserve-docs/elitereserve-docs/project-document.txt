@@ -1,0 +1,446 @@
+================================================================================
+                          PROJECT DOCUMENTATION FORM
+================================================================================
+
+================================================================================
+1. PROJECT OVERVIEW
+================================================================================
+
+Project Name: EliteReserve
+
+Version: version 0.0.1 (v1)
+
+Start Date: firts month of the semester
+
+Current Status: monolithic backend done
+
+Team: 3 people (Muhammad Ayyad, Adam Al-Afandi, Baha Abu Eida)
+
+================================================================================
+2. PROJECT DESCRIPTION
+================================================================================
+
+SIMPLE IDEA:
+This system is an online application, that allows people to book in hotels via the
+internet.
+The user creates an account on the system, and can choose hotel(global hotels), Technology
+choose a suitable roomtype, with of course deciding the check in and checkout Database
+in advance, when he chooses the room type in a hotel, he can book and pay. This system
+makes it easier for people as a hotel guide, and booking for a guarentee.
+
+
+SYSTEM USAGE FLOW:
+[1] Login page(register if no account yet, gets email messege for new account)
+[2] Main home page with hotels (pagination used), the user also has to determine the check in and checkout date, and number of people
+[3] Selected hotel shows available room types with prices per night
+[4] User selects aroom type and book (the system automatically assingns a room for him with that room type)(gets message of the booking)
+[5] User get payment window,and has to pay for the price according to the available pricing rule applied (get notified via email)
+[6] Done! the user booked via the system (can also cancel or extend the booking)
+
+
+HOW EACH FUNCTIONAL SERVICE WORKS (IN THE MONOLITH, LETS SAY THE PACKAGES IN THE PROJECT):
+
+[1] ADMIN: this is made for admin extra control over session review and management.
+
+[2] CATALOG: which contains hotels, room types and rooms. A customer is supposed to see all the hotel, chooses a hotel
+             then he views the room types available, so he can book a room type (a 
+             room is implicilty booked for the user by the system, as when he books he also gets to know
+             his room number in the hotel when he arrives in the hotel at check in date).
+             And when it comes to HOTEL_MANAGER, he can view and manage data of each hotel, that he manages. So he can 
+             create add rooms, room types to the hotel.
+
+[3] BOOKING: when a customer finds his perfect hotel and room type, he can book. When he books he has to pay, via the PAYMENT
+             service, and the price calculated by the PRICING service. The flow goes like this: the customer finds his best room types, and 
+             creates a booking, so the booking state is now pending, when he pays for the booking ID, the booking is now
+             confirmed. After he books he can of course extend the booking (delay the checkout date), and he can also cancel the booking 
+             within 48 hours with a 66% refund of money. Of course all booking process are tracked with email notifications
+             sent from the NOTIFICATION service.
+
+[4] PAYMENT: the role of the payment service is only used by the customer, as he has to pay for the booking, in case he makes a new
+             booking, or has to pay the difference in price if he extends. So the payment posted always holds 2 IDs, one for the main booking, and 
+             one for the extension. If booking is made is initial, the extensionId=null. If he extends, he sends the ID of the booking he wants to extend
+             plus the ID of the extended booking (which is the same booking actually, has different calculations for paying).
+
+[5] FEEDBACK: this service is made for the system to keep in track what the users(customers) think about the service. A customer sends his feedback directly
+              to the feedback entity in the databse (via of course the feedback service).
+
+[6] PRICING: this service is used to calculate the final price of the staying, using the hotel pricing rules (HOTEL PRICING RULE SUB SERVICE), and the           
+             the (HOTEL BASE PRICE SUB SERVICE), with taking in notice the base prices of the room types. The flow works like this: when a customer chooses his hotel,
+              room type, and dates, a calculation is made (pricing rules are applicable on dates and days included in the booking period + taking in notice the bas prices 
+              of the hotel + and the room types standard base price). At the end of the calculation the customer gets a final quotedPrice to pay (which is the base price, with made calculations
+              could be extra money or a discount, depending on the pricing rules applicable on every day in the period reserved).
+
+[7] RATING: this service allows customers to rate the hotel and the staying after the booking is ended, which helps the system admin tracking
+            the quality of hotels he has hosted in his system + plus giving to the next customers the average rating of each hotel, which
+            help them pick the best quality for the best money.
+
+[8] NOTIFICATION: this is the notifications service, that notifys users via email service, when the register on elitereserve, and when the created a booking, pay successfully for
+                  a booking, or requests an extension and pays for it, and also when a booking he made is cancelled or expired out of date.
+
+[9] USER: which are the users of the system, whether they are customers (CUSTOMER), hotel managers (HOTEL_MANAGER), or 
+          admins (ADMIN). and they are almost associated with all entities in the system,as without a user there is no functionality made.
+
+[10] AUTHENTICATION: this service is called the auth service, and it is used to athenticate users when the log in, via JWTs (BEARER type) and ROLE defrentiation.
+                     When a user logs in (he can register if he has no account existed on the system),he gets an access token, and a refresh token (High Security).
+                     The system uses his refresh token he gets, to refresh the access token, as access tokens don't last for ever.    
+                                                   
+
+KEY FEATURES:
+[1] User registration & authentication
+[2] Hotel search & filtering
+[3] Online booking & reservations
+[4] Payment integration
+[5] Room management(for hotel)
+[6] Booking management/cancellation/extending
+[7] Email notifications
+[8] Review & rating system
+
+POLICIES:
+[1] The booking can pend the payment for 15 minutes, if not payed, the booking is expired. Must book again
+[2] Customer gets refunded 2/3 of the amount only during 48 hours after the book, after 48 he can't cancel (no refund)
+[3] The payment process for the booking can only happen three times, after three times the booking is not valid (has to book again)
+[4] EliteReserve is not responsible for a mistake between the hotels and customers, it is only a guide for cudtomers, and a broker for hotels.
+[5] EliteReserve shows the rating of each hotel to the customer for best advice
+[6] A hotel manager can manage many hotels
+[7] A big resposibility for the hotels is that room managing must be manually tracked, such that rooms under maitainance or booked by cash, must be set not available
+
+
+TARGET USERS: 
+ - Customer: reviews hotels, room types, and books.
+ - Hotel Manager: can manage and review his hotel data.
+ - System Admin: can manage and review data transferred via the system, and can do incase issue solving if occured
+
+
+================================================================================
+3. TECHNOLOGY 
+================================================================================
+
+________________________________________________________________________
+Component       -        Technology           -         Version
+________________________________________________________________________
+
+Framework       -       Spring Boot           -            3.2.4
+------------------------------------------------------------------------
+Java Version    -                             -              21
+------------------------------------------------------------------------
+Build Tool      -           Maven             -             
+------------------------------------------------------------------------
+Security        -       1. Spring Security    -
+                        2. JWT
+------------------------------------------------------------------------                                     
+Database        -           MySQL             -
+------------------------------------------------------------------------                        
+ORM             -       JPA/Hibernate         -
+------------------------------------------------------------------------                    
+Email Service   -          JavaMail           -
+________________________________________________________________________                     
+                        
+
+================================================================================
+4. ARCHITECTURE OVERVIEW
+================================================================================
+
+Architecture Pattern: MONOLITHIC 
+
+ARCHITECTURE FLOW:
+==> DB -> Repository -> Service -> Controller -> Client (and vise versa).
+
+*** Data is transferred via DTOs (Data Transfer Objects).
+*** For each service there is a mapper, that converts from DTO (create/update) request to entity, and fron entity to DTO (response).
+
+================================================================================
+5. DATABASE SCHEMA
+================================================================================
+
+Database Name: bookingsystem
+
+MAIN ENTITIES:
+  hotels  
+  rooms
+  room_types
+  bookings
+  booking_extensions
+  hotel_pricing_rules
+  hotel_base_prices
+  payments
+  ratings
+  notifications
+  users
+  feedbacks
+
+================================================================================
+6. API DOCUMENTATION
+================================================================================
+
+API Style: REST 
+
+Authentication Method: Bearer Token (JWT) 
+
+BASE URL: http://localhost:8080 or http://localhost:8081
+
+MAIN API ENDPOINTS:
+------------------------------------------------------------------------------------------------------------
+Method    Endpoint                                  Description                    Auth Required
+------------------------------------------------------------------------------------------------------------
+
+AUTHENTICATION (/api/auth)
+------------------------------------------------------------------------------------------------------------
+POST      /auth/login                               User login                     No
+POST      /auth/register                            User registration              No
+POST      /auth/refresh                             Refresh access token           No (valid refresh token)
+POST      /auth/logout                              User logout                    Yes
+
+USER MANAGEMENT (/api/users)
+-------------------------------------------------------------------------------------------------------------
+POST      /api/users                                Create user (Admin)            Yes (Admin)
+GET       /api/users                                List all users (paginated)     Yes (Admin)
+GET       /api/users/{id}                           Get user by ID                 Yes (Admin or Self)
+PUT       /api/users/{id}                           Update user                    Yes (Admin or Self)
+DELETE    /api/users/{id}                           Delete user by ID              Yes (Admin)
+DELETE    /api/users/me                             Delete own account             Yes
+GET       /api/users/me                             Get current user profile       Yes
+
+HOTEL CATALOG (/api/v1/hotels)
+-------------------------------------------------------------------------------------------------------------
+GET       /api/v1/hotels                            List all hotels (paginated)    No
+GET       /api/v1/hotels/search                     Simple search hotels (query)   No
+POST      /api/v1/hotels/search                     Advanced search hotels (body)  No
+GET       /api/v1/hotels/{id}                       Get hotel details              No
+POST      /api/v1/hotels                            Create hotel                   Yes (Admin/Hotel Manager)
+PUT       /api/v1/hotels/{id}                       Update hotel                   Yes (Admin/Hotel Manager)
+DELETE    /api/v1/hotels/{id}                       Delete hotel                   Yes (Admin/Hotel Manager)
+GET       /api/v1/hotels/my-hotels                  Get my managed hotels          Yes (Hotel Manager)
+GET       /api/v1/hotels/{id}/manager               Get hotel manager              Yes (Admin/Hotel Manager/Customer)
+
+ROOM TYPES (/api/v1/room-types)
+--------------------------------------------------------------------------------------------------------------
+GET       /api/v1/room-types/{id}                   Get room type details          Yes (Any authenticated)
+GET       /api/v1/room-types/hotel/{hotelId}        Get room types by hotel        No
+POST      /api/v1/room-types                        Create room type               Yes (Admin/Hotel Manager)
+PUT       /api/v1/room-types/{id}                   Update room type (full)        Yes (Admin/Hotel Manager)
+PATCH     /api/v1/room-types/{id}                   Update room type (partial)     Yes (Admin/Hotel Manager)
+DELETE    /api/v1/room-types/{id}                   Delete room type               Yes (Admin/Hotel Manager)
+GET       /api/v1/room-types/amenities              Get all amenities              Yes (Any authenticated)
+
+ROOMS (/api/v1/rooms)
+--------------------------------------------------------------------------------------------------------------
+POST      /api/v1/rooms                             Create physical room           Yes (Admin/Hotel Manager)
+GET       /api/v1/rooms/type/{roomTypeId}           Get rooms by type              Yes (Any authenticated)
+GET       /api/v1/rooms/hotel/{hotelId}             Get all rooms in hotel         Yes (Any authenticated)
+GET       /api/v1/rooms/hotel/{hotelId}/rooms       Get rooms by hotel ID          Yes (Admin/Hotel Manager)
+GET       /api/v1/rooms/{id}/status                 Get room status                Yes (Admin/Hotel Manager)
+PATCH     /api/v1/rooms/{id}                        Update room                    Yes (Admin/Hotel Manager)
+DELETE    /api/v1/rooms/{id}                        Delete room                    Yes (Admin/Hotel Manager)
+
+BOOKINGS (/api/v1/bookings)
+----------------------------------------------------------------------------------------------------------------
+POST      /api/v1/bookings                          Create booking                 Yes (Customer/Admin/Hotel Manager)
+GET       /api/v1/bookings/{id}                     Get booking by ID              Yes (Customer/Admin/Hotel Manager)
+GET       /api/v1/bookings/{id}/user                Get user by booking ID         Yes (Admin/Hotel Manager/Owner)
+PATCH     /api/v1/bookings/{id}/request-extension   Request checkout extension     Yes (Customer/Admin)
+PATCH     /api/v1/bookings/extensions/{id}/confirm-payment  Confirm extension payment Yes (Customer/Admin)
+GET       /api/v1/bookings/my-pending-extensions    Get pending extensions         Yes (Customer/Admin)
+PATCH     /api/v1/bookings/{id}/cancel              Cancel booking                 Yes (Customer/Admin)
+GET       /api/v1/bookings/my-history               Get my booking history         Yes (Customer)
+GET       /api/v1/bookings/my-hotel-bookings        Get hotel bookings (Manager)   Yes (Hotel Manager)
+GET       /api/v1/bookings/hotel/{hotelId}/all      Get hotel bookings (Admin)     Yes (Admin)
+
+PAYMENTS (/api/v1/payments)
+----------------------------------------------------------------------------------------------------------------------
+GET       /api/v1/payments                          List all payments              Yes (Admin)
+GET       /api/v1/payments/{id}                     Get payment details            Yes (Admin or Owner)
+POST      /api/v1/payments                          Process new payment            Yes (Customer/Admin)
+DELETE    /api/v1/payments/{id}                     Delete payment                 Yes (Admin)
+
+PRICING (/api/v1/hotel-pricing)
+-------------------------------------------------------------------------------------------------------------------------
+GET       /api/v1/hotel-pricing/calculate           Calculate price breakdown      No
+POST      /api/v1/hotel-pricing/hotels/{id}/rules   Create pricing rule            Yes (Hotel Manager)
+GET       /api/v1/hotel-pricing/hotels/{id}/rules   Get hotel pricing rules        Yes (Hotel Manager)
+GET       /api/v1/hotel-pricing/rules/{id}          Get specific rule              Yes (Hotel Manager)
+POST      /api/v1/hotel-pricing/rules/{id}/assign-to-room-types Assign rule to room types Yes (Hotel Manager)
+GET       /api/v1/hotel-pricing/hotels/{id}/room-types/{id}/rules Get rules for room type Yes (Hotel Manager)
+POST      /api/v1/hotel-pricing/hotels/{id}/room-types/{id}/base-price Set base price Yes (Hotel Manager)
+GET       /api/v1/hotel-pricing/hotels/{id}/room-types/base-prices Get all base prices Yes (Hotel Manager)
+PATCH     /api/v1/hotel-pricing/base-prices/{id}    Update base price              Yes (Admin/Hotel Manager)
+DELETE    /api/v1/hotel-pricing/base-prices/{id}    Delete base price              Yes (Admin/Hotel Manager)
+PATCH     /api/v1/hotel-pricing/rules/{id}          Update pricing rule            Yes (Hotel Manager)
+DELETE    /api/v1/hotel-pricing/rules/{id}          Delete pricing rule            Yes (Admin/Hotel Manager)
+
+RATINGS (/api/v1/ratings)
+-----------------------------------------------------------------------------------------------------------------------------
+POST      /api/v1/ratings                           Submit rating/review           Yes (Customer)
+GET       /api/v1/ratings/hotel/{id}                Get hotel ratings              No
+GET       /api/v1/ratings/hotel/{id}/summary        Get rating summary             No
+GET       /api/v1/ratings/my-ratings                Get my ratings                 Yes (Customer)
+GET       /api/v1/ratings/{id}                      Get rating by ID               No
+DELETE    /api/v1/ratings/{id}                      Delete rating                  Yes (Customer/Admin)
+DELETE    /api/v1/ratings/admin/{id}                Admin delete rating            Yes (Admin)
+
+NOTIFICATIONS (/api/v1/notifications)
+-------------------------------------------------------------------------------------------------------------------
+GET       /api/v1/notifications                     Get my notifications (paginated) Yes (Any)
+GET       /api/v1/notifications/unread-count        Get unread count               Yes (Any)
+GET       /api/v1/notifications/{id}                Get notification by ID        Yes (Any)
+PATCH     /api/v1/notifications/{id}/read           Mark notification read        Yes (Any)
+PATCH     /api/v1/notifications/read-all            Mark all notifications read   Yes (Any)
+DELETE    /api/v1/notifications/{id}                Delete notification           Yes (Any)
+DELETE    /api/v1/notifications/delete-read         Delete all read notifications Yes (Any)
+
+FEEDBACK (/api/v1/feedbacks)
+-------------------------------------------------------------------------------------------------------------------
+POST      /api/v1/feedbacks                         Create feedback               Yes (Customer)
+GET       /api/v1/feedbacks/{id}                    Get feedback by ID            Yes (Customer/Admin)
+GET       /api/v1/feedbacks/my-feedbacks            Get my feedbacks              Yes (Customer)
+GET       /api/v1/feedbacks/my-average              Get my average rating         Yes (Customer)
+GET       /api/v1/feedbacks/customer/{id}           Get customer's feedbacks      Yes (Admin)
+GET       /api/v1/feedbacks/customer/{id}/average   Get customer's average rating Yes (Admin)
+GET       /api/v1/feedbacks                         Get all feedbacks (paginated) Yes (Customer/Admin)
+GET       /api/v1/feedbacks/category/{category}     Get feedbacks by category     Yes (Customer/Admin)
+GET       /api/v1/feedbacks/rating/{rating}         Get feedbacks by rating       Yes (Customer/Admin)
+GET       /api/v1/feedbacks/statistics              Get feedback statistics       Yes (Admin)
+DELETE    /api/v1/feedbacks/{id}                    Delete feedback               Yes (Customer/Admin)
+
+ADMIN (/api/v1/admin)
+-------------------------------------------------------------------------------------------------------------------
+GET       /api/v1/admin/active-sessions             Get active user sessions      Yes (Admin)
+
+
+
+API Documentation Tool: [*] Swagger/OpenAPI  [*] Postman Collection
+
+================================================================================
+7. ENVIRONMENT
+================================================================================
+
+Application Properties Location: src/main/resources
+
+ENVIRONMENT VARIABLES:
+-------------------------------------------------------
+Variable Name           Description                    
+-------------------------------------------------------
+DB_HOST                 Database connection URL      
+DB_USERNAME             Database username             
+DB_PASSWORD             Database password             
+JWT_SECRET              Secret key for JWT             
+MAIL_HOST               SMTP server                  
+MAIL_USERNAME           Email username               
+
+================================================================================
+8. SECURITY 
+================================================================================
+
+AUTHENTICATION FLOW DESCRIPTION:
+Login (email, password(strong)) ->(if user valid)-> enter the system
+
+
+AUTHORIZATION/ROLES:
+------------------------------------------------------------------------
+Role                    Permissions
+------------------------------------------------------------------------
+CUSTOMER                review hotels & rooms, book(also cancel, extend), pay
+HOTEL_MANAGER           review, manage hotel data 
+ADMIN                   almost everything + session data management
+
+SECURITY FEATURES IMPLEMENTED:
+[1] Password encryption (BCrypt)
+[2] JWT token validation
+[3] HTTPS/SSL
+[4] CORS configuration
+[5] Input validation
+
+================================================================================
+9. TESTING 
+================================================================================
+
+Test Coverage: like 70% (some cases are date sensitive,can not be easily tested)
+
+TESTING TYPES:
+[1] Unit Tests (JUnit)
+[2] Integration Tests
+
+Run Tests Command: mvn test 
+
+================================================================================
+11. PROJECT STRUCTURE
+================================================================================
+PACKAGE STRUCTURE
+--------------------------------------------------------------------------------
+ELITERESERVE-V1
+├── src 
+    ├── main
+        ├── java\com\hackops\hotel_booking_system  
+            ├── admin
+            ├── auth 
+            ├── booking            
+            ├── catalog       
+            ├── common       
+            ├── config   
+            ├── feedback   
+            ├── notification         
+            ├── payment        
+            ├── pricing 
+            ├── rating           
+            ├── security       
+            ├── user       
+            ├── HotelBookingSystemApplication.java
+        ├── resources  
+            ├── templates  
+            ├── application.properties         
+    ├── test     
+├── target                 
+├── .gitattributes          
+├── .gitignore       
+├── mvnw 
+├── mvnw.cmd   
+├── pom.xml            
+├── README.md        
+      
+
+
+================================================================================
+12. DEPENDENCIES
+================================================================================
+
+List main dependencies from pom.xml:
+
+---------------------------------------------------------------------------------------------
+Dependency                                      Purpose                        Version
+---------------------------------------------------------------------------------------------
+spring-boot-starter-web                         Web framework                  3.2.4 
+spring-boot-starter-thymeleaf                   Template engine                3.2.4 
+spring-boot-starter-data-jpa                    Database ORM                   3.2.4 
+postgresql                                      PostgreSQL driver              runtime 
+mysql-connector-j                               MySQL driver                   runtime 
+h2                                              In-memory test DB              runtime
+spring-boot-starter-security                    Security                       3.2.4 
+jjwt-api                                        JWT API                        0.12.6
+jjwt-impl                                       JWT implementation             0.12.6 
+jjwt-jackson                                    JWT Jackson serializer         0.12.6 
+spring-boot-starter-validation                  Input validation               3.2.4 
+spring-boot-starter-mail                        Email service                  3.2.4 
+spring-boot-starter-amqp                        RabbitMQ messaging             3.2.4 
+springdoc-openapi-starter-webmvc-ui             API docs (Swagger UI)          2.5.0
+lombok                                          Boilerplate reduction            -
+mapstruct                                       Object mapping                 1.5.5.Final
+spring-boot-devtools                            Hot reload (dev)               runtime 
+spring-boot-starter-test                        Testing framework              test 
+spring-security-test                            Security testing               test 
+
+================================================================================
+15. REFERENCES & RESOURCES
+================================================================================
+
+DOCUMENTATION LINKS:
+- API Documentation (Swagger UI): http://localhost:8080/swagger-ui.html
+- Database Schema Diagram: located in './EliteReserve-docs'
+- this current document: (project-document.txt) located in './EliteReserve-docs'
+- Postman Collection: (postman.json) located in './EliteReserve-docs'
+
+IMAGES:
+- hotel-images (folder) |- hotels (folder)
+                        |- room-types (folder)
+
+===============================================================================
+                         END OF DOCUMENTATION FORM
+================================================================================

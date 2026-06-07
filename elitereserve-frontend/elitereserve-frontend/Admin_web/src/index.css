@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Color Palette - Tokens from Stitch Design System */
+  --color-background: #f7f9fb;
+  --color-on-background: #191c1e;
+  
+  --color-surface: #f7f9fb;
+  --color-surface-dim: #d8dadc;
+  --color-surface-bright: #f7f9fb;
+  --color-surface-variant: #e0e3e5;
+  --color-on-surface: #191c1e;
+  --color-on-surface-variant: #424754;
+  
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f2f4f6;
+  --color-surface-container: #eceef0;
+  --color-surface-container-high: #e6e8ea;
+  --color-surface-container-highest: #e0e3e5;
+  
+  --color-primary: #0058be;
+  --color-primary-container: #2170e4;
+  --color-on-primary: #ffffff;
+  
+  --color-secondary: #5c5e65;
+  --color-secondary-container: #dedfe8;
+  --color-on-secondary: #ffffff;
+  
+  --color-tertiary: #6b38d4; /* Sophisticated Purple for ADMIN */
+  --color-tertiary-container: #8455ef;
+  --color-on-tertiary: #ffffff;
+  
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  
+  --color-outline: #727785;
+  --color-outline-variant: #c2c6d6;
+  
+  /* Sidebar Anchor */
+  --color-sidebar-bg: #1a1d23;
+  --color-sidebar-text: #ffffff;
+  --color-sidebar-hover: rgba(255, 255, 255, 0.1);
+  
+  /* Typography */
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  /* Spacing & Roundness */
+  --roundness-sm: 0.25rem;
+  --roundness-md: 0.5rem;
+  --roundness-lg: 1rem;
+  --roundness-full: 9999px;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 20px 50px -12px rgba(25, 28, 30, 0.08); /* Signature high-end shadow */
+  
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--color-on-surface);
+}
+
+button {
+  font-family: var(--font-family);
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+/* Base Layout Container */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-outline-variant);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-outline);
+}

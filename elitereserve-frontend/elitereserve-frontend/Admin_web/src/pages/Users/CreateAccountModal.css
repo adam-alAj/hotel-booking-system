@@ -1,0 +1,216 @@
+/* === MODAL OVERLAY === */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* === MODAL PANEL === */
+.modal-panel {
+  background-color: white;
+  width: 100%;
+  max-width: 480px;
+  border-radius: var(--roundness-lg);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* === MODAL HEADER === */
+.modal-header {
+  padding: 24px;
+  border-bottom: 2px solid #f1f5f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8fafc;
+}
+
+.header-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-icon {
+  color: var(--color-primary);
+}
+
+.modal-header h2 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-on-surface);
+  margin: 0;
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.modal-close-btn:hover {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+/* === FORM FIELDS === */
+.modal-form {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-field label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* === INPUT STYLES === */
+.form-field input,
+.form-field select {
+  padding: 10px 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--roundness-md);
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  outline: none;
+  background-color: white;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.form-field input.input-error {
+  border-color: #ef4444;
+}
+
+.form-field input:disabled,
+.form-field select:disabled {
+  background-color: #f8fafc;
+  cursor: not-allowed;
+  color: #94a3b8;
+}
+
+/* === ERROR MESSAGES === */
+.field-error-msg {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.modal-error-banner {
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
+  color: #991b1b;
+  padding: 12px;
+  border-radius: var(--roundness-md);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* === FORM ACTIONS === */
+.modal-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.cancel-btn {
+  flex: 1;
+  padding: 12px;
+  background: white;
+  border: 1.5px solid #e2e8f0;
+  border-radius: var(--roundness-md);
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.submit-btn {
+  flex: 2;
+  padding: 12px;
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--roundness-md);
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: var(--color-primary-container);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* === REDUCED MOTION === */
+@media (prefers-reduced-motion: reduce) {
+  .modal-overlay, .modal-panel, .submit-btn, .cancel-btn {
+    animation: none !important;
+    transition: none !important;
+  }
+}

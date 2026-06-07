@@ -1,0 +1,490 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Light Mode (Default) */
+:root {
+  --navbar-bg: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  --navbar-text: #1e293b;
+  --navbar-text-secondary: #64748b;
+  --navbar-border: #e2e8f0;
+  --navbar-hover: #f1f5f9;
+  --navbar-avatar-bg: #e2e8f0;
+  --navbar-logout-bg: rgba(239, 68, 68, 0.1);
+  --navbar-logout-hover: rgba(239, 68, 68, 0.2);
+  --navbar-logout-text: #ef4444;
+  --navbar-theme-bg: rgba(0, 0, 0, 0.05);
+  --navbar-theme-hover: #10b981;
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+  --navbar-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  --navbar-text: #ffffff;
+  --navbar-text-secondary: #94a3b8;
+  --navbar-border: rgba(255, 255, 255, 0.1);
+  --navbar-hover: rgba(255, 255, 255, 0.05);
+  --navbar-avatar-bg: #334155;
+  --navbar-logout-bg: rgba(239, 68, 68, 0.15);
+  --navbar-logout-hover: rgba(239, 68, 68, 0.25);
+  --navbar-logout-text: #f87171;
+  --navbar-theme-bg: rgba(255, 255, 255, 0.08);
+  --navbar-theme-hover: #10b981;
+}
+
+.manager-navbar {
+  background: var(--navbar-bg);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid var(--navbar-border);
+  transition: all 0.3s ease;
+}
+
+.manager-navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0.8rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Logo */
+.manager-navbar-logo {
+  text-decoration: none;
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+}
+
+.logo-elite {
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: var(--navbar-text);
+  letter-spacing: -0.5px;
+  font-family: 'Inter', sans-serif;
+}
+
+.logo-reserve {
+  font-weight: 300;
+  font-size: 1.6rem;
+  color: var(--navbar-text-secondary);
+  letter-spacing: -0.5px;
+  font-family: 'Inter', sans-serif;
+}
+
+.logo-manager {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #10b981;
+  margin-left: 0.75rem;
+  letter-spacing: -0.2px;
+  background: rgba(16, 185, 129, 0.15);
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+}
+
+/* Navbar Menu */
+.manager-navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Navbar Links */
+.manager-navbar-link {
+  text-decoration: none;
+  color: var(--navbar-text-secondary);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+}
+
+.manager-navbar-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #10b981, #3b82f6);
+  transition: width 0.3s ease;
+}
+
+.manager-navbar-link:hover::after {
+  width: 100%;
+}
+
+.manager-navbar-link:hover {
+  color: var(--navbar-text);
+}
+
+/* Theme Toggle Button in Navbar */
+.theme-toggle-navbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--navbar-theme-bg);
+  border: 1px solid var(--navbar-border);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle-navbar:hover {
+  background: var(--navbar-theme-hover);
+  border-color: var(--navbar-theme-hover);
+  transform: translateY(-2px);
+}
+
+.theme-toggle-navbar svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--navbar-text);
+  fill: none;
+}
+
+.theme-toggle-navbar:hover svg {
+  stroke: white;
+}
+
+/* User Section */
+.manager-navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.manager-user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #ffffff;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.manager-user-avatar:hover {
+  transform: scale(1.05);
+}
+
+.manager-navbar-welcome {
+  color: var(--navbar-text);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Logout Button */
+.manager-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--navbar-logout-bg);
+  border: 1px solid var(--navbar-border);
+  color: var(--navbar-logout-text);
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+}
+
+.manager-logout-btn:hover {
+  background: var(--navbar-logout-hover);
+  transform: translateY(-2px);
+}
+
+.manager-logout-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .manager-navbar-container {
+    padding: 0.6rem 1rem;
+  }
+
+  .logo-elite, .logo-reserve {
+    font-size: 1.3rem;
+  }
+
+  .logo-manager {
+    font-size: 0.7rem;
+    margin-left: 0.5rem;
+  }
+
+  .manager-navbar-menu {
+    gap: 0.8rem;
+  }
+
+  .manager-navbar-welcome {
+    display: none;
+  }
+
+  .manager-user-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+
+  .manager-logout-btn span {
+    display: none;
+  }
+
+  .manager-logout-btn {
+    padding: 0.5rem;
+  }
+
+  .theme-toggle-navbar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .theme-toggle-navbar svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .manager-navbar-container {
+    padding: 0.5rem 0.8rem;
+  }
+
+  .logo-elite, .logo-reserve {
+    font-size: 1.1rem;
+  }
+
+  .logo-manager {
+    font-size: 0.6rem;
+  }
+
+  .manager-navbar-link {
+    font-size: 0.8rem;
+  }
+
+  .manager-navbar-menu {
+    gap: 0.5rem;
+  }
+
+  .manager-user-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
+  }
+
+  .theme-toggle-navbar {
+    width: 28px;
+    height: 28px;
+  }
+  /* Tab Description */
+  .tab-description {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+  }
+
+  /* Mini Stats Row */
+  .stats-row-mini {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat-card-mini {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .stat-card-mini:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary);
+  }
+
+  .stat-card-mini.success .stat-value-mini { color: var(--success); }
+  .stat-card-mini.warning .stat-value-mini { color: var(--warning); }
+  .stat-card-mini.danger .stat-value-mini { color: var(--danger); }
+
+  .stat-icon {
+    font-size: 2rem;
+  }
+
+  .stat-value-mini {
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: block;
+    line-height: 1.2;
+  }
+
+  .stat-label-mini {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  /* Room Number Badge */
+  .room-number-cell {
+    font-weight: 600;
+  }
+
+  .room-number-badge {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+  }
+
+  .room-type-badge {
+    display: inline-block;
+    background: var(--bg-primary);
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    border: 1px solid var(--border);
+  }
+
+  /* Change Type Button */
+  .btn-icon-change {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 0.4rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-right: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .btn-icon-change:hover {
+    background: rgba(16, 185, 129, 0.25);
+    transform: translateY(-1px);
+  }
+
+  /* Room Types Grid - Card Layout */
+  .room-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .room-type-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .room-type-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .room-type-card-image {
+    height: 180px;
+    overflow: hidden;
+    background: var(--bg-primary);
+  }
+
+  .room-type-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .room-type-card:hover .room-type-card-image img {
+    transform: scale(1.05);
+  }
+
+  .room-type-card-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    background: var(--bg-primary);
+  }
+
+  .room-type-card-content {
+    padding: 1.2rem;
+  }
+
+  .room-type-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.8rem;
+  }
+
+  .room-type-card-header h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+  }
+
+  .room-type-card-price {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .room-type-card-price span {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+
+  .room-type-card-capacity {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.8rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+  }
+
+  .room-type-card-amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .room-type-card-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--border);
+  }
+}

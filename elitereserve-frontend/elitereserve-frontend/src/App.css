@@ -1,0 +1,251 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8fafc;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================
+   CUSTOMER LAYOUT STYLES
+   ============================================================ */
+.main-content-wrapper {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ============================================================
+   MANAGER LAYOUT STYLES
+   ============================================================ */
+.manager-main-content {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ============================================================
+   LOADING SCREEN (Shared)
+   ============================================================ */
+.loading-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0a1428 0%, #0f1a2a 100%);
+  color: white;
+  gap: 1.5rem;
+}
+
+.spinner-large {
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top: 4px solid #10b981;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   SHARED FORM STYLES
+   ============================================================ */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1e293b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  background: white;
+  color: #1e293b;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #94a3b8;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* ============================================================
+   SHARED BUTTON STYLES
+   ============================================================ */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: white;
+  color: #1e293b;
+  border: 1.5px solid #e2e8f0;
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+/* ============================================================
+   SHARED ERROR STYLES
+   ============================================================ */
+.error-message {
+  background: #fef2f2;
+  border-left: 3px solid #ef4444;
+  color: #dc2626;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ============================================================
+   SHARED STATUS BADGES
+   ============================================================ */
+.status-badge {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border-radius: 50px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge-confirmed,
+.badge-available {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-cancelled,
+.badge-deactivated {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* ============================================================
+   SHARED STAR RATINGS
+   ============================================================ */
+.star {
+  width: 16px;
+  height: 16px;
+}
+
+.star.filled {
+  color: #ffc107;
+  fill: #ffc107;
+}
+
+.star.empty {
+  color: #cbd5e1;
+  fill: #cbd5e1;
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN
+   ============================================================ */
+@media (max-width: 768px) {
+  .main-content-wrapper,
+  .manager-main-content {
+    padding: 1rem;
+  }
+
+  .form-row-2 {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}
